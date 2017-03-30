@@ -13,14 +13,18 @@ import {
     Text,
     View,
     Image,
+    ListView,
 } from 'react-native';
-
+import ListViewText from './ListViewText';
+import FetchTest from './fetchtest';
+import HttpUtils from './HttpUtils';
 export default class imooc_gp extends Component {
     constructor(props) {
         super(props);
-      
+        //const ds=new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!==r2})
         this.state = {
             selectedTab:'tb_popular',
+            //dataSource:ds.cloneWithRows
         };
     }
     render() {
@@ -66,7 +70,7 @@ export default class imooc_gp extends Component {
                       <View style={styles.page2}></View>
                   </TabNavigator.Item>
                 </TabNavigator>*/} 
-                <Navigator
+                {/*<Navigator
                     initialRoute={{
                         component: Boy
                     }}
@@ -74,8 +78,11 @@ export default class imooc_gp extends Component {
                         let Component=route.component;
                         return <Component navigator={navigator} {...route.params}/>
                     }}>
-                </Navigator>
+                </Navigator>*/}
+                {/*<ListViewText />*/}
+                <FetchTest />
             </View>
+            
         );
     }
 }

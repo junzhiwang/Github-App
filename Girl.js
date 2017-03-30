@@ -17,15 +17,12 @@ export default class Girl extends Component{
                 <Image style={{width:22,height:22,margin:5}} source={image}></Image>
             </TouchableOpacity>
         )
-    }
-    renderss(){
-        return <Text>hhsds</Text>
-    }
+    } 
     render(){
         return(
         <View style={styles.container}>
             <NavigationBar 
-                title={"Girl"} 
+                title={"Girl"}
                 style={{
                     backgroundColor:'red',
                 }}
