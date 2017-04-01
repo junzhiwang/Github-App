@@ -4,9 +4,7 @@
  * @flow
  */
 import React, { Component } from 'react';
-import {
-    AppRegistry,
-} from 'react-native';
+import { AppRegistry } from 'react-native';
 
 import Setup from './js/pages/Setup';
 

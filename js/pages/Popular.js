@@ -65,7 +65,7 @@ class PopularTab extends Component{
                     <RefreshControl
                         tintColor='#2196F3'
                         colors={['#2196F3']}
-                        title='Loading'
+                        title='Loading...'
                         refreshing={this.state.isLoading}
                         onRefresh={()=>this.loadData()}
                     />
