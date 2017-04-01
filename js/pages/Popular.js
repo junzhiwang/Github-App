@@ -5,7 +5,8 @@ import {
     Text,
     View,
     TextInput,
-    ListView
+    ListView,
+    RefreshControl,
 } from 'react-native';
 import ScrollableTabView,{ScrollableTabBar,} from 'react-native-scrollable-tab-view';
 import NavigationBar from '../common/NavigationBar';
@@ -24,10 +25,13 @@ export default class PopularPage extends Component {
     render() {
         return  <View style={styles.container}>        
                     <NavigationBar 
-                        title="hot"
-                        style={{backgroundColor:'#6495ED'}}
+                        title="Hot"
                     />
                     <ScrollableTabView
+                        tabBarBackgroundColor='#2196F3'
+                        tabBarInactiveTextColor='mintcream'
+                        tabBarActiveTextColor='white'
+                        tabBarUnderlineStyle={{backgroundColor:'#e7e7e7',height:2}}
                         initialPage={0}
                         renderTabBar={() => <ScrollableTabBar />}
                     >
@@ -45,6 +49,7 @@ class PopularTab extends Component{
       this.dataRepository = new DataRepository();
       this.state = {
          result:'',
+         isLoading:false,
          dataSource:new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!==r2})
       };
     }
@@ -52,10 +57,19 @@ class PopularTab extends Component{
         return <RepositoryCell data={data} />
     }
     render(){
-        return <View>
-            <ListView
+        return <View style={{flex:1}}>
+            <ListView 
                 dataSource={this.state.dataSource}
                 renderRow={(data)=>this.renderRow(data)}
+                refreshControl={
+                    <RefreshControl
+                        tintColor='#2196F3'
+                        colors={['#2196F3']}
+                        title='Loading'
+                        refreshing={this.state.isLoading}
+                        onRefresh={()=>this.loadData()}
+                    />
+                }
             >
             </ListView>
         </View>
@@ -64,15 +78,20 @@ class PopularTab extends Component{
         this.loadData();
     }
     loadData(){
+        this.setState({
+            isLoading:true
+        })
         let url=URL+this.props.tabLabel+QUERY_STR;
         this.dataRepository.fetchNetRepository(url)
             .then(result=>{
                 this.setState({
-                    dataSource:this.state.dataSource.cloneWithRows(result.items)
+                    dataSource:this.state.dataSource.cloneWithRows(result.items),
+                    isLoading:false
                 });
             }).catch(err=>{
                 this.setState({
-                    result:JSON.stringify(err)
+                    result:JSON.stringify(err),
+                    isLoading:false
                 });
             });
     }
