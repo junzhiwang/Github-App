@@ -6,7 +6,7 @@ import {
     Navigator
 } from 'react-native';
 import WelcomePage from './WelcomePage';
-function setup(){
+function Setup(){
     //initial setups
     
     class Root extends Component{
@@ -23,4 +23,4 @@ function setup(){
     }
     return <Root/>
 }
-module.exports=setup;
+module.exports = Setup;

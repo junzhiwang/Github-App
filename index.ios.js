@@ -8,7 +8,6 @@ import {
     AppRegistry,
 } from 'react-native';
 
-import setup from './js/pages/setup';
+import Setup from './js/pages/Setup';
 
-
-AppRegistry.registerComponent('imooc_gp', () => setup);
+AppRegistry.registerComponent('imooc_gp', () => Setup);
