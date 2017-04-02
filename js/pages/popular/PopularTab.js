@@ -5,9 +5,10 @@ import {
     View,
     ListView,
     RefreshControl,
+    DeviceEventEmitter,
 } from 'react-native';
 import RepositoryCell from '../../common/ReposityoryCell';
-import DataRepository from '../../expand/dao/DataRepository';
+import DataRepository,{DATA_FLAG} from '../../expand/dao/DataRepository';
 const URL='https://api.github.com/search/repositories?q=';
 const QUERY_STR='&sort=stars';
 export default class PopularTab extends Component{
@@ -34,7 +35,7 @@ export default class PopularTab extends Component{
                         colors={['#2196F3']}
                         title='Loading...'
                         refreshing={this.state.isLoading}
-                        onRefresh={()=>this.loadData()}
+                        onRefresh={()=>this.loadData(true)}
                     />
                 }
             >
@@ -42,25 +43,49 @@ export default class PopularTab extends Component{
         </View>
     }
     componentDidMount(){
-        this.loadData();
+        this.loadData(false);
     }
-    loadData(){
+    genFetchUrl(key){
+        return URL + key + QUERY_STR;
+    }
+    loadData(again){
         this.setState({
             isLoading:true
         })
-        let url=URL+this.props.tabLabel+QUERY_STR;
-        this.dataRepository.fetchNetRepository(url)
-            .then(result=>{
-                this.setState({
-                    dataSource:this.state.dataSource.cloneWithRows(result.items),
-                    isLoading:false
+        let url = this.genFetchUrl(this.props.tabLabel);
+        if(!again){
+            this.dataRepository.fetchRepository(url)
+                .then(result=>{
+                    DeviceEventEmitter.emit('showToast',result.from);
+                    this.setState({
+                        dataSource:this.state.dataSource.cloneWithRows(result.items),
+                        isLoading:false
+                    });
+                })
+                .catch(err=>{
+                    this.setState({
+                        result:JSON.stringify(err),
+                        isLoading:false
+                    });
                 });
-            }).catch(err=>{
-                this.setState({
-                    result:JSON.stringify(err),
-                    isLoading:false
+        } else {
+            this.dataRepository.fetchNetRepository(url)
+                .then(result=>{
+                    if(result && result.items && result.items.length > 0){
+                        DeviceEventEmitter.emit('showToast',DATA_FLAG.NETWORK);
+                        this.setState({
+                            dataSource:this.state.dataSource.cloneWithRows(result.items),
+                            isLoading:false
+                        });
+                    } else DeviceEventEmitter.emit('showToast',"No Internect connection");
+                })
+                .catch(err=>{
+                    this.setState({
+                        result:JSON.stringify(err),
+                        isLoading:false
+                    });
                 });
-            });
+        }
     }
 }
 const styles = StyleSheet.create({

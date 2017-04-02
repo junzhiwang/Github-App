@@ -15,7 +15,7 @@ import CustomTagPage from './CustomTagPage';
 import NavigationBar from '../../common/NavigationBar';
 import SortableListView from 'react-native-sortable-listview';
 import ViewUtils from '../../util/ViewUtils';
-export default class MyPage extends Component {
+export default class SortTagPage extends Component {
     constructor(props) {
         super(props);
         this.dataArray = [];
@@ -88,7 +88,7 @@ export default class MyPage extends Component {
                         </TouchableOpacity>
         return  <View style={styles.container}>        
                     <NavigationBar 
-                        title="SortKey"
+                        title="SortTag"
                         leftButton={ViewUtils.getLeftButton(()=>this.onBack())}
                         rightButton={rightButton}
                     />
@@ -112,7 +112,7 @@ class SortCell extends Component{
     render(){
         return <TouchableHighlight
             underlayColor={'#eee'}
-            delayLongPress={500} 
+            delayLongPress={200} 
             style={styles.item}
             {...this.props.sortHandlers}>
             <View style={{flex:1,flexDirection:'row'}}>

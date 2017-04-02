@@ -14,10 +14,9 @@ import CheckBox from 'react-native-check-box'
 import ViewUtils from '../../util/ViewUtils'
 import NavigationBar from '../../common/NavigationBar';
 import LanguageDao, {FLAG_LANGUAGE} from '../../expand/dao/LanguageDao';
-export default class CustomTagPage extends Component {
+export default class RemoveTagPage extends Component {
     constructor(props) {
         super(props);
-        this.isRemoveTag = this.props.isRemoveTag? true : false;
         this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_key);
         this.state={
             dataArray:[]
@@ -60,11 +59,6 @@ export default class CustomTagPage extends Component {
             this.props.navigator.pop();
             return;
         }
-        if(this.isRemoveTag){
-            for(let i = 0; i < this.changedValues.length; ++i){
-                ArrayUtils.remove(this.state.dataArray,this.changedValues[i]);
-            }
-        }
         this.languageDao.save(this.state.dataArray);
         this.props.navigator.pop();
     }
@@ -83,12 +77,11 @@ export default class CustomTagPage extends Component {
         )
     }
     onClick(data){
-        if(!this.isRemoveTag) data.checked = !data.checked;
+        data.checked = !data.checked;
         ArrayUtils.updateArray(this.changedValues, data);
     }
     renderCheckBox(data){
         let leftText = data.name;
-        let isChecked = this.isRemoveTag ? false : data.checked;
         return (
             <CheckBox 
                 onClick={()=>this.onClick(data)}
@@ -102,23 +95,21 @@ export default class CustomTagPage extends Component {
                     <Image style={{tintColor:'#6495ED'}}
                         source={require('../../../res/images/ic_check_box_outline_blank.png')}/>
                 }
-                isChecked={isChecked}
+                isChecked={data.checked}
             />
         )
     }
     render() {
-        let rightButtonTitle = this.isRemoveTag?'Remove':'Save';
         let rightButton=<TouchableOpacity
                             onPress={()=>this.onSave()}>
                             <View style={{margin:10}}>
-                                <Text style={styles.tips}>{rightButtonTitle}</Text>
+                                <Text style={styles.tips}>Remove</Text>
                             </View>
                         </TouchableOpacity>
         let tags = this.renderView();
-        let title=this.isRemoveTag?'Remove Tags':'Custom Tags';
         return  <View style={styles.container}>        
                     <NavigationBar 
-                        title={title}
+                        title="Remove Tags"
                         leftButton={ViewUtils.getLeftButton(()=>this.onBack())}
                         rightButton={rightButton}
                     />

@@ -14,7 +14,7 @@ export default class languageDao {
 				if(err){
 					reject(err);
 				} else {
-					if(result){
+					if(result&&JSON.parse(result).length!==0){
 						try{
 							resolve(JSON.parse(result));
 						}

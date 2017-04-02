@@ -12,9 +12,6 @@ export default class ArrayUtils{
         }
         array.push(item);
 	}
-    /**
-     *  Clone an array
-     */
     static clone(from){
         if(!from) return [];
         let newArray = [];
@@ -30,5 +27,13 @@ export default class ArrayUtils{
             if(arr1[i]!==arr2[i]) return false;
         }
         return true;
+    }
+    static remove(arr, item){
+        if(!arr)return;
+        for(let i = 0; i < arr.length; ++i){
+            if(item === arr[i]){
+                arr.splice(i, 1);
+            }
+        }
     }
 }

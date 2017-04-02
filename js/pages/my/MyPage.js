@@ -7,7 +7,8 @@ import {
 } from 'react-native';
 import CustomTagPage from './CustomTagPage';
 import NavigationBar from '../../common/NavigationBar';
-import SortKeyPage from './SortKeyPage'
+import SortTagPage from './SortTagPage';
+import RemoveTagPage from './RemoveTagPage.js'
 export default class MyPage extends Component {
     constructor(props) {
         super(props);
@@ -22,7 +23,10 @@ export default class MyPage extends Component {
                         onPress={()=>{
                             this.props.navigator.push({
                                 component:CustomTagPage,
-                                params:{...this.props}
+                                params:{
+                                    ...this.props,
+                                    isRemoveTag:false
+                                }
                             })
                         }}
                     >Custom Tags</Text>
@@ -30,11 +34,25 @@ export default class MyPage extends Component {
                         navigator={this.props.navigator}
                         onPress={()=>{
                             this.props.navigator.push({
-                                component:SortKeyPage,
-                                params:{...this.props}
+                                component:SortTagPage,
+                                params:{
+                                    ...this.props
+                                }
                             })
                         }}
-                    >Sort Keys</Text>
+                    >Sort Tags</Text>
+                    <Text style={styles.tips}
+                        navigator={this.props.navigator}
+                        onPress={()=>{
+                            this.props.navigator.push({
+                                component:CustomTagPage,
+                                params:{
+                                    ...this.props,
+                                    isRemoveTag:true,
+                                }
+                            })
+                        }}
+                    >Remove Tags</Text>
                 </View> 
     }
 }
