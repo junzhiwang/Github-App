@@ -6,11 +6,23 @@ import {
 	StyleSheet,
 	TouchableOpacity
 } from 'react-native';
-
+import RepositoryDetail from '../pages/RepositoryDetail';
 export default class RepositoryCell extends Component{
+	constructor(props) {
+        super(props);
+    }
 	render(){
 		return <TouchableOpacity
 			style={styles.container}
+			onPress={()=>{
+				this.props.navigator.push({
+					component:RepositoryDetail,
+					params:{
+						item:this.props.data,
+						...this.props,
+					}
+				})
+			}}
 			>
 			<View style={styles.cell_container}>
         	    <Text style={styles.title}>{this.props.data.full_name}</Text>

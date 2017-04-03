@@ -8,6 +8,7 @@ import {
     Image,
     DeviceEventEmitter,
 } from 'react-native';
+import FavoritePage from './FavoritePage';
 import Toast,{DURATION} from 'react-native-easy-toast';
 import PopularPage from './popular/PopularPage';
 import AsyncStoragePage from '../../AsyncStorage';
@@ -38,7 +39,7 @@ export default class HomePage extends Component {
                        renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_polular.png')} />}
                        renderSelectedIcon={() => <Image style={[styles.image,{tintColor:'red'}]} source={require('../../res/images/ic_polular.png')} />}
                        onPress={() => this.setState({ selectedTab: 'tb_popular' })}>
-                       <PopularPage navigator={this.props.navigator}/>
+                       <PopularPage {...this.props}/>
                    </TabNavigator.Item>
                    <TabNavigator.Item
                        selected={this.state.selectedTab === 'tb_trending'}
@@ -47,7 +48,7 @@ export default class HomePage extends Component {
                        renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_trending.png')} />}
                        renderSelectedIcon={() => <Image style={[styles.image,{tintColor:'blue'}]} source={require('../../res/images/ic_trending.png')} />}
                        onPress={() => this.setState({ selectedTab: 'tb_trending' })}>
-                       <AsyncStoragePage/>
+                       <AsyncStoragePage {...this.props}/>
                    </TabNavigator.Item>
                    <TabNavigator.Item
                        selected={this.state.selectedTab === 'tb_favorite'}
@@ -57,7 +58,7 @@ export default class HomePage extends Component {
                        renderSelectedIcon={() => <Image style={[styles.image,{tintColor:'red'}]} source={require('../../res/images/ic_favorite.png')} />}
                       
                        onPress={() => this.setState({ selectedTab: 'tb_favorite' })}>
-                       <View style={styles.page1}></View>
+                       <FavoritePage {...this.props}/>
                    </TabNavigator.Item>
                    <TabNavigator.Item
                        selected={this.state.selectedTab === 'tb_my'}
@@ -66,7 +67,7 @@ export default class HomePage extends Component {
                        renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_my.png')} />}
                        renderSelectedIcon={() => <Image style={[styles.image,{tintColor:'blue'}]} source={require('../../res/images/ic_my.png')} />}
                        onPress={() => this.setState({ selectedTab: 'tb_my' })}>
-                       <MyPage navigator={this.props.navigator}/>
+                       <MyPage {...this.props}/>
                    </TabNavigator.Item>
                 </TabNavigator>
                 <Toast ref={toast=>this.toast=toast}/>

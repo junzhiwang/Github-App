@@ -7,6 +7,7 @@ import {
     RefreshControl,
     DeviceEventEmitter,
 } from 'react-native';
+import RepositoryDetail from '../RepositoryDetail';
 import RepositoryCell from '../../common/ReposityoryCell';
 import DataRepository,{DATA_FLAG} from '../../expand/dao/DataRepository';
 const URL='https://api.github.com/search/repositories?q=';
@@ -22,7 +23,10 @@ export default class PopularTab extends Component{
         };
     }
     renderRow(data){
-        return <RepositoryCell data={data} />
+        return <RepositoryCell 
+            {...this.props} 
+            key={data.id}
+            data={data} />
     }
     render(){
         return <View style={{flex:1}}>

@@ -46,7 +46,7 @@ export default class PopularPage extends Component {
                     >
                         {this.state.languages.map((result,i,arr)=>{
                             let item = arr[i];
-                            return item.checked? <PopularTab key={i} tabLabel={item.name}/>:null
+                            return item.checked? <PopularTab key={i} tabLabel={item.name} {...this.props}/>:null
                         })}
                     </ScrollableTabView> : null;
 
