@@ -8,7 +8,7 @@ import {
     DeviceEventEmitter,
 } from 'react-native';
 import RepositoryDetail from '../RepositoryDetail';
-import RepositoryCell from '../../common/ReposityoryCell';
+import RepositoryCell from '../../common/RepositoryCell';
 import DataRepository,{FLAG_STORAGE} from '../../expand/dao/DataRepository';
 const URL='https://api.github.com/search/repositories?q=';
 const QUERY_STR='&sort=stars';
@@ -70,9 +70,6 @@ export default class PopularTab extends Component{
                     return this.dataRepository.fetchNetRepository(url);
                 } else {
                     DeviceEventEmitter.emit('showToast','Local data used');
-                    this.setState({
-                        isLoading:false
-                    });
                 }
             })
             .then(result=>{
@@ -80,14 +77,12 @@ export default class PopularTab extends Component{
                     DeviceEventEmitter.emit('showToast','Network data fetched');
                     this.setState({
                         dataSource:this.state.dataSource.cloneWithRows(result.items),
-                        isLoading:false
                     });
                 }
             })
             .catch(err=>{
                 this.setState({
                     result:JSON.stringify(err),
-                    isLoading:false
                 });
             });
         } else {
@@ -97,17 +92,18 @@ export default class PopularTab extends Component{
                     DeviceEventEmitter.emit('showToast','Network data fetched');
                     this.setState({
                         dataSource:this.state.dataSource.cloneWithRows(result.items),
-                        isLoading:false
                     });
                 } else DeviceEventEmitter.emit('showToast',"No Internect connection");
             })
             .catch(err=>{
                 this.setState({
                     result:JSON.stringify(err),
-                    isLoading:false
                 });
             });
         }
+        this.setState({
+            isLoading:false
+        });
     }
 }
 const styles = StyleSheet.create({

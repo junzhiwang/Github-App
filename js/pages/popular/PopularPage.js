@@ -20,19 +20,20 @@ export default class PopularPage extends Component {
             result:'',
             languages:[],
         };
+        this.loadLanguage();
     }
-    loadData(){
+    loadLanguage(){
         this.languageDao.fetch()
-            .then(result=>{
-                this.setState({
-                    languages:result,
-                });
-            }).catch(err=>{
-                console.log(err);
+        .then(result=>{
+            this.setState({
+                languages:result,
             });
+        }).catch(err=>{
+            console.log(err);
+        });
     }
     componentDidMount(){
-        this.loadData();
+        
     }
     render() {
         let content = this.state.languages.length > 0 ?

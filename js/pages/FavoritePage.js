@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { 
+import {
 	StyleSheet,
 	WebView,
 	View,
@@ -23,7 +23,7 @@ export default class FavoritePage extends Component {
 
     }
     checkUrl(){
-
+      
     }
     goBack(){
         if(this.state.canGoBack){
@@ -54,16 +54,16 @@ export default class FavoritePage extends Component {
     }
     render(){
       return (
-      	  <View style={styles.container}>  
-      	  	  <NavigationBar 
+      	  <View style={styles.container}>
+      	  	  <NavigationBar
       	  	  	title="WebView"
       	  	  	style={{backgroundColor:'#6495ED'}}
       	  	  />
               <View style={{flexDirection:'row',alignItems:'center'}}>
-      	  	      <Text style={{marginLeft:8,marginRight:4}} 
+      	  	      <Text style={{marginLeft:8,marginRight:4}}
                       onPress={()=>this.goBack()}
                   >Back</Text>
-                  <Text style={{marginLeft:4,marginRight:4}} 
+                  <Text style={{marginLeft:4,marginRight:4}}
                       onPress={()=>this.goForward()}
                   >Forward</Text>
                   <TextInput onChangeText={text=>this.text=text}
@@ -74,7 +74,7 @@ export default class FavoritePage extends Component {
                       placeholderTextColor='#757575'
 
                   />
-                  <Text style={{marginLeft:4,marginRight:8}} 
+                  <Text style={{marginLeft:4,marginRight:8}}
                       onPress={()=>this.go()}
                   >Go</Text>
               </View>

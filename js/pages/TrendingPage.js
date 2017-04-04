@@ -1,126 +1,96 @@
 import React, { Component } from 'react';
 import {
     StyleSheet,
+    Navigator,
     Text,
     View,
     TextInput,
-    DeviceEventEmitter,
     ListView,
+    Image,
     RefreshControl,
+    TouchableOpacity,
 } from 'react-native';
-const URL = 'https://github.com/trending';
-import ViewUtils from '../util/ViewUtils';
-import GitHubTrending from 'GitHubTrending';
+import TimeSpan from '../model/TimeSpan';
+import  Popover from '../common/Popover';
+import LanguageDao,{FLAG_LANGUAGE} from '../expand/dao/LanguageDao';
+import TrendingTab from './TrendingTab';
+import ScrollableTabView,{ScrollableTabBar,} from 'react-native-scrollable-tab-view';
 import NavigationBar from '../common/NavigationBar';
-import TrendingCell from '../common/TrendingCell';
-export default class TrendingPage extends Component{
-    constructor(props){
+var timespanTextArray=[
+    new TimeSpan('Today','since=daily'),
+    new TimeSpan('Week','since=weekly'),
+    new TimeSpan('Month','since=monthly')
+];
+export default class TrendingPage extends Component {
+    constructor(props) {
         super(props);
-        this.githubTrending = new GitHubTrending();
-        this.state = {
-            result:[],
-            err:'',
-            isLoading:false,
-            dataSource:new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!==r2})
+        this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_language);
+        this.state={
+            result:'',
+            languages:[],
         };
+        this.loadLanguage();
     }
-    renderRow(data){
-        return <TrendingCell 
-            {...this.props} 
-            key={data.id}
-            data={data} />
-    }
-    componentDidMount(){
-        this.githubTrending.fetchTrending(URL)
-            .then(repoData=>{
-                this.setState({
-                    dataSource:this.state.dataSource.cloneWithRows(repoData)
-                })
-            })
-            .catch(err=>{
-                this.setState({
-                    err:JSON.stringify(err),
-                })
-            });
-    }
-    loadData(){
-        this.setState({
-            isLoading:true,
-        });
-        setTimeout(()=>{
+    loadLanguage(){
+        this.languageDao.fetch()
+        .then(result=>{
             this.setState({
-                isLoading:false,
+                languages:result,
             });
-        },1500);
+        }).catch(err=>{
+            console.log(err);
+        });
     }
     componentDidMount(){
-        this.githubTrending.fetchTrending(URL)
-            .then(repoData=>{
-                this.setState({
-                    dataSource:this.state.dataSource.cloneWithRows(repoData)
-                })
-            })
-            .catch(err=>{
-                this.setState({
-                    err:JSON.stringify(err),
-                })
-            });
+
     }
-    render(){
-      return (
-          <View style={styles.container}>  
-              <NavigationBar 
-                  title='GitHubTrending'
-                  style={{backgroundColor:'#6495ED'}}
-              />
-              <View style={{flex:1}}>
-                  <ListView 
-                      dataSource={this.state.dataSource}
-                      renderRow={(data)=>this.renderRow(data)}
-                      refreshControl={
-                          <RefreshControl
-                              tintColor='#2196F3'
-                              colors={['#2196F3']}
-                              title='Loading...'
-                              refreshing={this.state.isLoading}
-                              onRefresh={()=>this.loadData()}
-                          />
-                      }
-                  >
-                  </ListView>
-              </View>
-          </View>
-      );
+    renderTitleView(){
+        return <View>
+            <TouchableOpacity>
+                <View style={{flexDirection:'row',alignItems:'center'}}>
+                    <Text style={styles.title}>Trending</Text>
+                    <Image
+                        style={{height:12,width:12,marginLeft:5}}
+                        source={require('../../res/images/ic_spinner_triangle.png')}
+                    />
+                </View>
+            </TouchableOpacity>
+        </View>
+    }
+    render() {
+        let content = this.state.languages.length > 0 ?
+                    <ScrollableTabView
+                        tabBarBackgroundColor='#2196F3'
+                        tabBarInactiveTextColor='mintcream'
+                        tabBarActiveTextColor='white'
+                        tabBarUnderlineStyle={{backgroundColor:'#e7e7e7',height:2}}
+                        initialPage={0}
+                        renderTabBar={() => <ScrollableTabBar />}
+                    >
+                        {this.state.languages.map((result,i,arr)=>{
+                            let item = arr[i];
+                            return item.checked? <TrendingTab key={i} tabLabel={item.name} {...this.props}/>:null
+                        })}
+                    </ScrollableTabView> : null;
+
+        return  <View style={styles.container}>
+                    <NavigationBar
+                        title="Trending"
+                        titleView={this.renderTitleView()}
+                    />
+                    {content}
+                </View>
     }
 }
-
-const styles=StyleSheet.create({
-    container:{
-        flex:1
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    tips: {
+        fontSize: 5,
     },
     title:{
-        fontSize:16,
-        marginBottom:2,
-        color:'#212121',
+        fontSize:20,
+        color:'white',
     },
-    description:{
-        fontSize:14,
-        marginBottom:2,
-        color:'#757575',
-    },
-    cell_container:{
-        backgroundColor:'white',
-        padding:10,
-        marginLeft:5,
-        marginRight:5,
-        marginVertical:3,
-        borderWidth:0.5,
-        borderRadius:2,
-        borderColor:'#dddddd',
-        shadowColor:'gray',
-        shadowOffset:{width:0.5,height:0.5},
-        shadowOpacity:0.4,
-        shadowRadius:1,
-        elevation:2,
-    },
-})
+});

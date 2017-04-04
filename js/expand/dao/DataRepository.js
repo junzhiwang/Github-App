@@ -27,7 +27,7 @@ export default class DataRepository{
 			}).catch(err=>{
 				reject(err);
 			});
-		});	
+		});
 	}
 	fetchLocalRepository(url){
 		return new Promise((resolve, reject)=>{

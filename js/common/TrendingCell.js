@@ -6,32 +6,71 @@ import {
 	StyleSheet,
 	TouchableOpacity
 } from 'react-native';
+import HTMLView from 'react-native-htmlview';
+import RepositoryDetail from '../pages/RepositoryDetail';
 export default class TrendingCell extends Component{
 	constructor(props) {
         super(props);
     }
 	render(){
+		let data = this.props.data;
+		let description = '<p>' + data.description + '</p>';
 		return <TouchableOpacity
 			style={styles.container}
 			onPress={()=>{
-				//this.props.navigator.push({
-				//	component:RepositoryDetail,
-				//	params:{
-				//		item:this.props.data,
-				//		...this.props,
-				//	}
-				//})
+				this.props.navigator.push({
+					component:RepositoryDetail,
+					params:{
+						item:this.props.data,
+						...this.props,
+					}
+				})
 			}}
 			>
 			<View style={styles.cell_container}>
-        	    <Text style={styles.title}>{this.props.data.fullName}</Text>
-        	    <Text style={styles.description}>{this.props.data.description}</Text>
-        	  	<Text style={styles.description}>{this.props.data.language}</Text>
+        	    <Text style={styles.title}>{data.fullName}</Text>
+        	    <HTMLView
+        	    	value={description}
+        	    	onLinkPress={(url)=>{}}
+        	    	stylesheet={{
+        	    		p:styles.description,
+        	    		a:styles.description
+        	    	}}
+        	    />
+        	  	<View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
+        	  		<Text style={[styles.description,{marginRight:10,color:'black'}]}>{data.language}</Text>
+        	  		<View style={{flexDirection:'row',alignItems:'center'}}>
+        	    		<Text style={styles.description}>{data.meta}</Text>
+        	    	</View>
+        	    </View>
+        	  	<View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
+        	  		<View style={{flexDirection:'row',alignItems:'center',}}>
+        	    		<Text>Built by: </Text>
+        	    		{data.contributors.map((result,i,arr)=>{
+        	    			return <Image 
+        	    				key={i}
+        	    				style={{height:22,width:22}}
+        	    				source={{uri:arr[i]}}
+       						/>
+        	    		})}
+        	    	</View>
+        	    	<Image 
+        	    		style={{height:18,width:18}}
+        	    		source={require('../../res/images/ic_star.png')}
+        	    	/>
+        	    </View>
         	</View>
         </TouchableOpacity>
 	}
 }
-
+const HTMLViewStyles = StyleSheet.create({
+	a:{
+		fontSize:14,
+		marginTop:10,
+		marginBottom:10,
+		color:'#757575',
+	}
+})
 const styles=StyleSheet.create({
 	container:{
 		flex:1
