@@ -2,47 +2,32 @@ import React, { Component } from 'react';
 import {
     AsyncStorage,
 } from 'react-native';
-export var DATA_FLAG = {LOCAL:'Data fetched from local',NETWORK:'Data fetched from network', OBSOLETE_LOCAL:'No network connection, show obsolete data from local'};
+import GitHubTrending from 'GitHubTrending';
+export var FLAG_STORAGE={flag_popular:'popular',flag_trending:'trending'};
 export default class DataRepository{
+	constructor(flag){
+		this.flag = flag;
+		if(flag===FLAG_STORAGE.flag_trending){
+			this.trending = new GitHubTrending();
+		}
+	}
 	fetchRepository(url){
 		return new Promise((resolve, reject)=>{
 			this.fetchLocalRepository(url)
-			.then(result=>{
-				if(result && result.update_date && 
-					this.checkDate(result.update_date) && 
-						result.items.length > 0){
-					result.from = DATA_FLAG.LOCAL;
-					resolve(result);
+			.then((wrapData)=>{
+				if(wrapData){
+					resolve(wrapData);
 				} else {
-					this.fetchNetRepository(url)
-					.then(result=>{
-						let netResult = result && result.items ? 
-								result : null;
-						if(netResult && netResult.items && netResult.items.length > 0) {
-							netResult.from = DATA_FLAG.NETWORK;
-							resolve(netResult);
-						} else {
-							this.fetchLocalRepository(url)
-							.then(result=>{
-								if(result){
-									result.from = DATA_FLAG.OBSOLETE_LOCAL;
-									resolve(result);
-								}
-							})
-							.catch(err=>{
-								reject(err);
-							})
-						}
-					})
-					.catch(e=>{
-						reject(e);
+					this.fetchNetRepository(url).then((data)=>{
+						resolve(data);
+					}).catch(err=>{
+						reject(err);
 					})
 				}
-			})
-			.catch(e=>{
-				reject(e);
-			})
-		});
+			}).catch(err=>{
+				reject(err);
+			});
+		});	
 	}
 	fetchLocalRepository(url){
 		return new Promise((resolve, reject)=>{
@@ -62,20 +47,36 @@ export default class DataRepository{
 	}
 	fetchNetRepository(url){
 		return new Promise((resolve, reject)=>{
-			fetch(url)
-			.then(response=>response.json())
-			.then(result=>{
-				if(!result){
-					reject(new Error('responseData is null'));
-					return;
-				}
-				resolve(result);
-				this.saveRepository(url,result.items);
-
-			})
-			.catch(err=>{
-				reject(err);
-			});
+			if(this.flag===FLAG_STORAGE.flag_trending){
+				this.trending.fetchTrending(url)
+				.then(result=>{
+					if(!result){
+						reject(new Error('responseData is null'));
+						return;
+					} else {
+						resolve(result);
+						if(result&&result.length>0){
+							this.saveRepository(url, result);
+						}
+					}
+				}).catch(err=>{
+					reject(err);
+				});
+			} else {
+				fetch(url)
+				.then(response=>response.json())
+				.catch((err)=>{
+					reject(err);
+				})
+				.then(responseData=>{
+					if(!responseData||!responseData.items||!responseData.items.length===0){
+						reject(new Error('responseData is null'));
+						return;
+					}
+					resolve(responseData);
+					this.saveRepository(url,responseData.items);
+				}).done();
+			}
 		});
 	}
 	saveRepository(url,items){

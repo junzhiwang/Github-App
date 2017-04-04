@@ -9,13 +9,13 @@ import {
 } from 'react-native';
 import RepositoryDetail from '../RepositoryDetail';
 import RepositoryCell from '../../common/ReposityoryCell';
-import DataRepository,{DATA_FLAG} from '../../expand/dao/DataRepository';
+import DataRepository,{FLAG_STORAGE} from '../../expand/dao/DataRepository';
 const URL='https://api.github.com/search/repositories?q=';
 const QUERY_STR='&sort=stars';
 export default class PopularTab extends Component{
     constructor(props) {
         super(props);
-        this.dataRepository = new DataRepository();
+        this.dataRepository = new DataRepository(FLAG_STORAGE.flag_popular);
         this.state = {
             result:'',
             isLoading:false,
@@ -40,6 +40,7 @@ export default class PopularTab extends Component{
                         title='Loading...'
                         refreshing={this.state.isLoading}
                         onRefresh={()=>this.loadData(true)}
+                        progressBackgroundColor="#ffff00"
                     />
                 }
             >
@@ -59,36 +60,53 @@ export default class PopularTab extends Component{
         let url = this.genFetchUrl(this.props.tabLabel);
         if(!again){
             this.dataRepository.fetchRepository(url)
-                .then(result=>{
-                    DeviceEventEmitter.emit('showToast',result.from);
+            .then(result=>{
+                let items = result && result.items ? result.items : result ? result : [];
+                this.setState({
+                    dataSource:this.state.dataSource.cloneWithRows(items)
+                });
+                if(!result || !result.update_date || !this.dataRepository.checkDate(result.update_date)){
+                    DeviceEventEmitter.emit('showToast','Local data deprecated');
+                    return this.dataRepository.fetchNetRepository(url);
+                } else {
+                    DeviceEventEmitter.emit('showToast','Local data used');
+                    this.setState({
+                        isLoading:false
+                    });
+                }
+            })
+            .then(result=>{
+                if(result && result.items && result.items.length > 0){
+                    DeviceEventEmitter.emit('showToast','Network data fetched');
                     this.setState({
                         dataSource:this.state.dataSource.cloneWithRows(result.items),
                         isLoading:false
                     });
-                })
-                .catch(err=>{
-                    this.setState({
-                        result:JSON.stringify(err),
-                        isLoading:false
-                    });
+                }
+            })
+            .catch(err=>{
+                this.setState({
+                    result:JSON.stringify(err),
+                    isLoading:false
                 });
+            });
         } else {
             this.dataRepository.fetchNetRepository(url)
-                .then(result=>{
-                    if(result && result.items && result.items.length > 0){
-                        DeviceEventEmitter.emit('showToast',DATA_FLAG.NETWORK);
-                        this.setState({
-                            dataSource:this.state.dataSource.cloneWithRows(result.items),
-                            isLoading:false
-                        });
-                    } else DeviceEventEmitter.emit('showToast',"No Internect connection");
-                })
-                .catch(err=>{
+            .then(result=>{
+                if(result && result.items && result.items.length > 0){
+                    DeviceEventEmitter.emit('showToast','Network data fetched');
                     this.setState({
-                        result:JSON.stringify(err),
+                        dataSource:this.state.dataSource.cloneWithRows(result.items),
                         isLoading:false
                     });
+                } else DeviceEventEmitter.emit('showToast',"No Internect connection");
+            })
+            .catch(err=>{
+                this.setState({
+                    result:JSON.stringify(err),
+                    isLoading:false
                 });
+            });
         }
     }
 }
