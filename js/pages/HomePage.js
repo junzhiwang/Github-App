@@ -13,7 +13,7 @@ import Toast,{DURATION} from 'react-native-easy-toast';
 import PopularPage from './popular/PopularPage';
 import AsyncStoragePage from '../../AsyncStorage';
 import MyPage from './my/MyPage';
-import TrendingPage from './TrendingPage';
+import TrendingPage from './trending/TrendingPage';
 export default class HomePage extends Component {
     constructor(props) {
         super(props);
@@ -31,7 +31,7 @@ export default class HomePage extends Component {
     }
     render() {
         return (
-            <View style={styles.container}>        
+            <View style={styles.container}>
                 <TabNavigator>
                    <TabNavigator.Item
                        selected={this.state.selectedTab === 'tb_popular'}
@@ -57,7 +57,7 @@ export default class HomePage extends Component {
                        title="favorite"
                        renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_favorite.png')} />}
                        renderSelectedIcon={() => <Image style={[styles.image,{tintColor:'red'}]} source={require('../../res/images/ic_favorite.png')} />}
-                      
+
                        onPress={() => this.setState({ selectedTab: 'tb_favorite' })}>
                        <FavoritePage {...this.props}/>
                    </TabNavigator.Item>

@@ -9,11 +9,11 @@ import {
     RefreshControl,
 } from 'react-native';
 const API_URL = 'https://github.com/trending';
-import ViewUtils from '../util/ViewUtils';
+import ViewUtils from '../../util/ViewUtils';
 import GitHubTrending from 'GitHubTrending';
-import NavigationBar from '../common/NavigationBar';
-import TrendingCell from '../common/TrendingCell';
-import DataRepository,{FLAG_STORAGE} from '../expand/dao/DataRepository';
+import NavigationBar from '../../common/NavigationBar';
+import TrendingCell from '../../common/TrendingCell';
+import DataRepository,{FLAG_STORAGE} from '../../expand/dao/DataRepository';
 export default class TrendingTab extends Component{
     constructor(props){
         super(props);
@@ -22,7 +22,6 @@ export default class TrendingTab extends Component{
             result:[],
             err:'',
             isLoading:false,
-            timeSpan:'daily',
             dataSource:new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!==r2})
         };
     }
@@ -36,13 +35,18 @@ export default class TrendingTab extends Component{
         )
     }
     componentDidMount(){
-        this.loadData(false);
+        this.loadData(this.props.timeSpan,false);
     }
     genFetchUrl(timeSpan){
-        return API_URL + '/' + this.props.tabLabel + '?since=' + timeSpan;
+        return API_URL + '/' + this.props.tabLabel + '?' + timeSpan;
     }
-    loadData(again){
-        let url = this.genFetchUrl(this.state.timeSpan);
+    componentWillReceiveProps(nextProps){
+        if(nextProps.timeSpan!==this.props.timeSpan){
+            this.loadData(nextProps.timeSpan,false);
+        }
+    }
+    loadData(timeSpan,again){
+        let url = this.genFetchUrl(timeSpan.searchText);
         this.setState({
             isLoading:true
         });
@@ -92,7 +96,7 @@ export default class TrendingTab extends Component{
                               colors={['#2196F3']}
                               title='Loading...'
                               refreshing={this.state.isLoading}
-                              onRefresh={()=>this.loadData(true)}
+                              onRefresh={()=>this.loadData(this.props.timeSpan,true)}
                           />
                       }
                   >

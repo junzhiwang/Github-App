@@ -7,6 +7,7 @@ import {
     RefreshControl,
     DeviceEventEmitter,
 } from 'react-native';
+import ProjectModel from '../../model/ProjectModel';
 import RepositoryDetail from '../RepositoryDetail';
 import RepositoryCell from '../../common/RepositoryCell';
 import DataRepository,{FLAG_STORAGE} from '../../expand/dao/DataRepository';
@@ -22,15 +23,16 @@ export default class PopularTab extends Component{
             dataSource:new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!==r2})
         };
     }
-    renderRow(data){
-        return <RepositoryCell 
-            {...this.props} 
-            key={data.id}
-            data={data} />
+    renderRow(projectModel){
+        return <RepositoryCell
+            {...this.props}
+            key={projectModel.item.id}
+            projectModel={projectModel}
+        />
     }
     render(){
         return <View style={{flex:1}}>
-            <ListView 
+            <ListView
                 dataSource={this.state.dataSource}
                 renderRow={(data)=>this.renderRow(data)}
                 refreshControl={
@@ -53,6 +55,28 @@ export default class PopularTab extends Component{
     genFetchUrl(key){
         return URL + key + QUERY_STR;
     }
+    /**
+     * Update Item favorite state
+     */
+
+    flushFavoriteState(data){
+        let projectModels = [];
+        let items = data;
+        for (var i = 0; i < items.length; ++i){
+            projectModels.push(new ProjectModel(items[i], false));
+        }
+        this.updateState({
+            isLoading:false,
+            dataSource:this.getDataSource(projectModels)
+        })
+    }
+    getDataSource(data){
+        return this.state.dataSource.cloneWithRows(data);
+    }
+    updateState(dict){
+        if(!this)return
+        this.setState(dict);
+    }
     loadData(again){
         this.setState({
             isLoading:true
@@ -62,9 +86,7 @@ export default class PopularTab extends Component{
             this.dataRepository.fetchRepository(url)
             .then(result=>{
                 let items = result && result.items ? result.items : result ? result : [];
-                this.setState({
-                    dataSource:this.state.dataSource.cloneWithRows(items)
-                });
+                this.flushFavoriteState(items);
                 if(!result || !result.update_date || !this.dataRepository.checkDate(result.update_date)){
                     DeviceEventEmitter.emit('showToast','Local data deprecated');
                     return this.dataRepository.fetchNetRepository(url);
@@ -75,9 +97,7 @@ export default class PopularTab extends Component{
             .then(result=>{
                 if(result && result.items && result.items.length > 0){
                     DeviceEventEmitter.emit('showToast','Network data fetched');
-                    this.setState({
-                        dataSource:this.state.dataSource.cloneWithRows(result.items),
-                    });
+                    this.flushFavoriteState(result.items);
                 }
             })
             .catch(err=>{
@@ -90,9 +110,7 @@ export default class PopularTab extends Component{
             .then(result=>{
                 if(result && result.items && result.items.length > 0){
                     DeviceEventEmitter.emit('showToast','Network data fetched');
-                    this.setState({
-                        dataSource:this.state.dataSource.cloneWithRows(result.items),
-                    });
+                    this.flushFavoriteState(result.items);
                 } else DeviceEventEmitter.emit('showToast',"No Internect connection");
             })
             .catch(err=>{
@@ -101,9 +119,6 @@ export default class PopularTab extends Component{
                 });
             });
         }
-        this.setState({
-            isLoading:false
-        });
     }
 }
 const styles = StyleSheet.create({

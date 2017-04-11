@@ -8,7 +8,6 @@ import {
 import WelcomePage from './WelcomePage';
 function Setup(){
     //initial setups
-    
     class Root extends Component{
         renderScene(route,navigator){
             let Component=route.component;

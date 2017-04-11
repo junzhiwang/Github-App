@@ -17,8 +17,8 @@ import LanguageDao, {FLAG_LANGUAGE} from '../../expand/dao/LanguageDao';
 export default class CustomTagPage extends Component {
     constructor(props) {
         super(props);
-        this.isRemoveTag = this.props.isRemoveTag? true : false;
-        this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_key);
+        this.isRemoveTag = this.props.isRemoveTag;
+        this.languageDao = new LanguageDao(this.props.flag);
         this.state={
             dataArray:[]
         }
@@ -72,7 +72,7 @@ export default class CustomTagPage extends Component {
         if(this.changedValues.length==0){
             this.props.navigator.pop();
             return;
-        } 
+        }
         Alert.alert(
             'Tips',
             'Save the modifications?',
@@ -90,7 +90,7 @@ export default class CustomTagPage extends Component {
         let leftText = data.name;
         let isChecked = this.isRemoveTag ? false : data.checked;
         return (
-            <CheckBox 
+            <CheckBox
                 onClick={()=>this.onClick(data)}
                 style={{flex:1}}
                 leftText={leftText}
@@ -115,17 +115,18 @@ export default class CustomTagPage extends Component {
                             </View>
                         </TouchableOpacity>
         let tags = this.renderView();
-        let title=this.isRemoveTag?'Remove Tags':'Custom Tags';
-        return  <View style={styles.container}>        
-                    <NavigationBar 
-                        title={title}
+        let title1 = this.props.isRemoveTag?'Remove ':'Custom ';
+        let title2 = this.props.flag === FLAG_LANGUAGE.flag_language ? 'languages' : 'tags';
+        return  <View style={styles.container}>
+                    <NavigationBar
+                        title={title1 + title2}
                         leftButton={ViewUtils.getLeftButton(()=>this.onBack())}
                         rightButton={rightButton}
                     />
                     <ScrollView>
                         {tags}
                     </ScrollView>
-                </View>  
+                </View>
     }
 }
 

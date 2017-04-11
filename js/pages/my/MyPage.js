@@ -5,6 +5,7 @@ import {
     Text,
     View,
 } from 'react-native';
+import {FLAG_LANGUAGE} from '../../expand/dao/LanguageDao';
 import CustomTagPage from './CustomTagPage';
 import NavigationBar from '../../common/NavigationBar';
 import SortTagPage from './SortTagPage';
@@ -14,8 +15,8 @@ export default class MyPage extends Component {
         super(props);
     }
     render() {
-        return  <View style={styles.container}>        
-                    <NavigationBar 
+        return  <View style={styles.container}>
+                    <NavigationBar
                         title="My"
                     />
                     <Text style={styles.tips}
@@ -25,7 +26,8 @@ export default class MyPage extends Component {
                                 component:CustomTagPage,
                                 params:{
                                     ...this.props,
-                                    isRemoveTag:false
+                                    isRemoveTag:false,
+                                    flag:FLAG_LANGUAGE.flag_key,
                                 }
                             })
                         }}
@@ -36,7 +38,8 @@ export default class MyPage extends Component {
                             this.props.navigator.push({
                                 component:SortTagPage,
                                 params:{
-                                    ...this.props
+                                    ...this.props,
+                                    flag:FLAG_LANGUAGE.flag_key,
                                 }
                             })
                         }}
@@ -49,11 +52,50 @@ export default class MyPage extends Component {
                                 params:{
                                     ...this.props,
                                     isRemoveTag:true,
+                                    flag:FLAG_LANGUAGE.flag_key,
                                 }
                             })
                         }}
                     >Remove Tags</Text>
-                </View> 
+                    <Text style={styles.tips}
+                        navigator={this.props.navigator}
+                        onPress={()=>{
+                            this.props.navigator.push({
+                                component:CustomTagPage,
+                                params:{
+                                    ...this.props,
+                                    isRemoveTag:false,
+                                    flag:FLAG_LANGUAGE.flag_language,
+                                }
+                            })
+                        }}
+                    >Custom langs</Text>
+                    <Text style={styles.tips}
+                        navigator={this.props.navigator}
+                        onPress={()=>{
+                            this.props.navigator.push({
+                                component:SortTagPage,
+                                params:{
+                                    ...this.props,
+                                    flag:FLAG_LANGUAGE.flag_language,
+                                }
+                            })
+                        }}
+                    >Sort langs</Text>
+                    <Text style={styles.tips}
+                        navigator={this.props.navigator}
+                        onPress={()=>{
+                            this.props.navigator.push({
+                                component:CustomTagPage,
+                                params:{
+                                    ...this.props,
+                                    isRemoveTag:true,
+                                    flag:FLAG_LANGUAGE.flag_language,
+                                }
+                            })
+                        }}
+                    >Remove langs</Text>
+                </View>
     }
 }
 

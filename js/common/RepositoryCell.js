@@ -6,43 +6,63 @@ import {
 	StyleSheet,
 	TouchableOpacity
 } from 'react-native';
+
 import RepositoryDetail from '../pages/RepositoryDetail';
 export default class RepositoryCell extends Component{
 	constructor(props) {
         super(props);
+		this.state = {
+			isFavorite:false,
+			favoriteIcon:require('../../res/images/ic_unstar_transparent.png')
+		}
+    }
+    setFavoriteState(isFavorite){
+        this.setState({
+            isFavorite:isFavorite,
+            favoriteIcon:isFavorite ? require('../../res/images/ic_star.png')
+                : require('../../res/images/ic_unstar_transparent.png')
+        })
+    }
+    onPressFavorite(){
+        this.setFavoriteState(!this.state.isFavorite);
     }
 	render(){
+        let item = this.props.projectModel.item ? this.props.projectModel.item
+            : this.props.projectModel;
+		let favoriteButton = <TouchableOpacity
+				onPress = {()=>this.onPressFavorite()}>
+					<Image
+						style={[{height:22,width:22},{tintColor:'#2196F3'}]}
+						source={this.state.favoriteIcon}/>
+		    </TouchableOpacity>
+
 		return <TouchableOpacity
 			style={styles.container}
 			onPress={()=>{
 				this.props.navigator.push({
 					component:RepositoryDetail,
 					params:{
-						item:this.props.data,
+						item:item,
 						...this.props,
 					}
 				})
-			}}
-			>
+			}}>
 			<View style={styles.cell_container}>
-        	    <Text style={styles.title}>{this.props.data.full_name}</Text>
-        	    <Text style={styles.description}>{this.props.data.description}</Text>
+        	    <Text style={styles.title}>{item.full_name}</Text>
+        	    <Text style={styles.description}>{item.description}</Text>
         	    <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
         	    	<View style={{flexDirection:'row',alignItems:'center',}}>
         	    		<Text>Author: </Text>
-        	    		<Image 
+        	    		<Image
         	    			style={{height:22,width:22}}
-        	    			source={{uri:this.props.data.owner.avatar_url}}
+        	    			source={{uri:item.owner.avatar_url}}
         	    		/>
         	    	</View>
         	    	<View style={{flexDirection:'row',alignItems:'center'}}>
         	    		<Text>Stars:</Text>
-        	    		<Text>{this.props.data.stargazers_count}</Text>
+        	    		<Text>{item.stargazers_count}</Text>
         	    	</View>
-        	    	<Image 
-        	    		style={{height:18,width:18}}
-        	    		source={require('../../res/images/ic_star.png')}
-        	    	/>
+        	    			{favoriteButton}
         	    </View>
         	</View>
         </TouchableOpacity>

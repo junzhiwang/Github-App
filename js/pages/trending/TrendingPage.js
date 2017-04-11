@@ -10,12 +10,12 @@ import {
     RefreshControl,
     TouchableOpacity,
 } from 'react-native';
-import TimeSpan from '../model/TimeSpan';
-import  Popover from '../common/Popover';
-import LanguageDao,{FLAG_LANGUAGE} from '../expand/dao/LanguageDao';
+import TimeSpan from '../../model/TimeSpan';
+import Popover from '../../common/Popover';
+import LanguageDao,{FLAG_LANGUAGE} from '../../expand/dao/LanguageDao';
 import TrendingTab from './TrendingTab';
 import ScrollableTabView,{ScrollableTabBar,} from 'react-native-scrollable-tab-view';
-import NavigationBar from '../common/NavigationBar';
+import NavigationBar from '../../common/NavigationBar';
 var timespanTextArray=[
     new TimeSpan('Today','since=daily'),
     new TimeSpan('Week','since=weekly'),
@@ -28,6 +28,9 @@ export default class TrendingPage extends Component {
         this.state={
             result:'',
             languages:[],
+            isVisible: false,
+            buttonRect: {},
+            timeSpan:timespanTextArray[0]
         };
         this.loadLanguage();
     }
@@ -44,18 +47,39 @@ export default class TrendingPage extends Component {
     componentDidMount(){
 
     }
+    showPopover(){
+        this.refs.button.measure((ox,oy,width,height,px,py)=>{
+            this.setState({
+                isVisible:true,
+                buttonRect:{x:px+40,y:py,width:width,height:height}
+            });
+        });
+    }
+    closePopover() {
+        this.setState({
+            isVisible:false
+        });
+    }
     renderTitleView(){
         return <View>
-            <TouchableOpacity>
+            <TouchableOpacity
+                ref='button'
+                onPress={()=>this.showPopover()}>
                 <View style={{flexDirection:'row',alignItems:'center'}}>
-                    <Text style={styles.title}>Trending</Text>
+                    <Text style={styles.title}>Trending {this.state.timeSpan.showText}</Text>
                     <Image
                         style={{height:12,width:12,marginLeft:5}}
-                        source={require('../../res/images/ic_spinner_triangle.png')}
+                        source={require('../../../res/images/ic_spinner_triangle.png')}
                     />
                 </View>
             </TouchableOpacity>
         </View>
+    }
+    onSelectTimeSpan(timeSpan){
+        this.setState({
+            timeSpan:timeSpan,
+            isVisible:false,
+        });
     }
     render() {
         let content = this.state.languages.length > 0 ?
@@ -65,20 +89,40 @@ export default class TrendingPage extends Component {
                         tabBarActiveTextColor='white'
                         tabBarUnderlineStyle={{backgroundColor:'#e7e7e7',height:2}}
                         initialPage={0}
-                        renderTabBar={() => <ScrollableTabBar />}
+                        renderTabBar={() => <ScrollableTabBar/>}
                     >
                         {this.state.languages.map((result,i,arr)=>{
                             let item = arr[i];
-                            return item.checked? <TrendingTab key={i} tabLabel={item.name} {...this.props}/>:null
+                            return item.checked?
+                            <TrendingTab
+                                key={i}
+                                tabLabel={item.name}
+                                timeSpan={this.state.timeSpan}
+                                {...this.props}/>:null
                         })}
                     </ScrollableTabView> : null;
-
+        let timeSpanView = <Popover
+                    placement='bottom'
+                    isVisible={this.state.isVisible}
+                    fromRect={this.state.buttonRect}
+                    onClose={()=>this.closePopover()}
+                    contentStyle={{backgroundColor:'#343434',opacity:0.8}}>
+                {timespanTextArray.map((result,i,arr)=>{
+                    let item = arr[i];
+                    return <TouchableOpacity
+                            key={i}
+                            underlayColor='transparent'
+                            onPress={()=>this.onSelectTimeSpan(arr[i])}>
+                        <Text style={{fontSize:18,color:'white',fontWeight:'400',padding:8}}>{arr[i].showText}</Text>
+                    </TouchableOpacity>
+                })}
+            </Popover>
         return  <View style={styles.container}>
                     <NavigationBar
-                        title="Trending"
                         titleView={this.renderTitleView()}
                     />
                     {content}
+                    {timeSpanView}
                 </View>
     }
 }

@@ -26,7 +26,7 @@ export default class SortTagPage extends Component {
         }
     }
     componentDidMount(){
-        this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_key);
+        this.languageDao = new LanguageDao(this.props.flag);
         this.loadData();
     }
     loadData(){
@@ -68,7 +68,7 @@ export default class SortTagPage extends Component {
         if(ArrayUtils.isEqual(this.originalSortedArray, this.state.sortedArray)){
             this.props.navigator.pop();
             return;
-        } 
+        }
         Alert.alert(
             'Tips',
             'Save the modifications?',
@@ -79,16 +79,17 @@ export default class SortTagPage extends Component {
         )
     }
     render() {
-        
+
         let rightButton = <TouchableOpacity
                             onPress={()=>this.onSave(false)}>
                             <View style={{margin:10}}>
                                 <Text style={styles.tips}>Save</Text>
                             </View>
                         </TouchableOpacity>
-        return  <View style={styles.container}>        
-                    <NavigationBar 
-                        title="SortTag"
+        let title = this.props.flag === FLAG_LANGUAGE.flag_language ? 'Sort languages' : 'Sort tags';
+        return  <View style={styles.container}>
+                    <NavigationBar
+                        title={title}
                         leftButton={ViewUtils.getLeftButton(()=>this.onBack())}
                         rightButton={rightButton}
                     />
@@ -105,19 +106,19 @@ export default class SortTagPage extends Component {
                         }}
                         renderRow={row => <SortCell data={row} />}
                     />
-                </View> 
+                </View>
     }
 }
 class SortCell extends Component{
     render(){
         return <TouchableHighlight
             underlayColor={'#eee'}
-            delayLongPress={200} 
+            delayLongPress={200}
             style={styles.item}
             {...this.props.sortHandlers}>
             <View style={{flex:1,flexDirection:'row'}}>
-                <Image style={styles.image} 
-                    source={require('../../../res/images/ic_sort.png')}/>    
+                <Image style={styles.image}
+                    source={require('../../../res/images/ic_sort.png')}/>
                 <Text style={styles.text}>{this.props.data.name}</Text>
             </View>
         </TouchableHighlight>
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
     item:{
         padding: 15,
         backgroundColor: "#F8F8F8",
-        borderBottomWidth:1, 
+        borderBottomWidth:1,
         borderColor: '#eee',
     },
     row:{
