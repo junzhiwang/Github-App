@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import FavoriteDao from '../../expand/dao/FavoriteDao';
 import ProjectModel from '../../model/ProjectModel';
+import RepositoryDetail from '../RepositoryDetail';
 import RepositoryCell from '../../common/RepositoryCell';
 import DataRepository,{FLAG_STORAGE} from '../../expand/dao/DataRepository';
 import Utils from '../../util/Utils';

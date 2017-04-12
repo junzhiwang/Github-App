@@ -28,7 +28,7 @@ export default class languageDao {
 						this.save(data);
 						resolve(data);
 					}
-				}
+				} 
 			});
 		})
 	}

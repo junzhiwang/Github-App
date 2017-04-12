@@ -47,6 +47,7 @@ export default class RepositoryCell extends Component{
 				this.props.navigator.push({
 					component:RepositoryDetail,
 					params:{
+						item:item,
 						...this.props,
 					}
 				})

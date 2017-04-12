@@ -14,8 +14,6 @@ import TimeSpan from '../../model/TimeSpan';
 import Popover from '../../common/Popover';
 import LanguageDao,{FLAG_LANGUAGE} from '../../expand/dao/LanguageDao';
 import TrendingTab from './TrendingTab';
-import FavoriteDao from '../../expand/dao/FavoriteDao';
-import {FLAG_STORAGE} from '../../expand/dao/DataRepository';
 import ScrollableTabView,{ScrollableTabBar,} from 'react-native-scrollable-tab-view';
 import NavigationBar from '../../common/NavigationBar';
 var timespanTextArray=[
@@ -26,8 +24,7 @@ var timespanTextArray=[
 export default class TrendingPage extends Component {
     constructor(props) {
         super(props);
-        this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_trending);
-        this.favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_trending);
+        this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_language);
         this.state={
             result:'',
             languages:[],
@@ -46,6 +43,9 @@ export default class TrendingPage extends Component {
         }).catch(err=>{
             console.log(err);
         });
+    }
+    componentDidMount(){
+
     }
     showPopover(){
         this.refs.button.measure((ox,oy,width,height,px,py)=>{
@@ -98,7 +98,6 @@ export default class TrendingPage extends Component {
                                 key={i}
                                 tabLabel={item.name}
                                 timeSpan={this.state.timeSpan}
-                                favoriteDao = {this.favoriteDao}
                                 {...this.props}/>:null
                         })}
                     </ScrollableTabView> : null;
@@ -117,14 +116,14 @@ export default class TrendingPage extends Component {
                         <Text style={{fontSize:18,color:'white',fontWeight:'400',padding:8}}>{arr[i].showText}</Text>
                     </TouchableOpacity>
                 })}
-            </Popover>;
-        return  (<View style={styles.container}>
+            </Popover>
+        return  <View style={styles.container}>
                     <NavigationBar
                         titleView={this.renderTitleView()}
                     />
                     {content}
                     {timeSpanView}
-                </View>);
+                </View>
     }
 }
 const styles = StyleSheet.create({
