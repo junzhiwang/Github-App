@@ -8,6 +8,8 @@ import {
     ListView,
     RefreshControl,
 } from 'react-native';
+import FavoriteDao from '../../expand/dao/FavoriteDao';
+import {FLAG_STORAGE} from '../../expand/dao/DataRepository';
 import LanguageDao,{FLAG_LANGUAGE} from '../../expand/dao/LanguageDao';
 import PopularTab from './PopularTab'
 import ScrollableTabView,{ScrollableTabBar,} from 'react-native-scrollable-tab-view';
@@ -15,6 +17,7 @@ import NavigationBar from '../../common/NavigationBar';
 export default class PopularPage extends Component {
     constructor(props) {
         super(props);
+        this.favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_popular);
         this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_key);
         this.state={
             result:'',
@@ -33,7 +36,7 @@ export default class PopularPage extends Component {
         });
     }
     componentDidMount(){
-        
+
     }
     render() {
         let content = this.state.languages.length > 0 ?
@@ -47,16 +50,16 @@ export default class PopularPage extends Component {
                     >
                         {this.state.languages.map((result,i,arr)=>{
                             let item = arr[i];
-                            return item.checked? <PopularTab key={i} tabLabel={item.name} {...this.props}/>:null
+                            return item.checked? <PopularTab key={i} tabLabel={item.name} favoriteDao = {this.favoriteDao} {...this.props}/>:null
                         })}
                     </ScrollableTabView> : null;
 
-        return  <View style={styles.container}>        
-                    <NavigationBar 
+        return  <View style={styles.container}>
+                    <NavigationBar
                         title="Hot"
                     />
                     {content}
-                </View>  
+                </View>
     }
 }
 const styles = StyleSheet.create({

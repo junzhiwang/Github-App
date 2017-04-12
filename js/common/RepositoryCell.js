@@ -6,14 +6,15 @@ import {
 	StyleSheet,
 	TouchableOpacity
 } from 'react-native';
-
 import RepositoryDetail from '../pages/RepositoryDetail';
 export default class RepositoryCell extends Component{
 	constructor(props) {
         super(props);
 		this.state = {
-			isFavorite:false,
-			favoriteIcon:require('../../res/images/ic_unstar_transparent.png')
+			isFavorite:this.props.projectModel.isFavorite,
+			favoriteIcon:this.props.projectModel.isFavorite ? require('../../res/images/ic_star.png')
+             : require('../../res/images/ic_unstar_transparent.png')
+
 		}
     }
     setFavoriteState(isFavorite){
@@ -24,7 +25,11 @@ export default class RepositoryCell extends Component{
         })
     }
     onPressFavorite(){
-        this.setFavoriteState(!this.state.isFavorite);
+        /** declare a local variable to avoid that async method change the {this.state.isFavorite}
+            then cause some unexpected result (from debug)**/
+        let isFavorite = this.state.isFavorite;
+        this.setFavoriteState(!isFavorite);
+        this.props.onFavorite(this.props.projectModel.item, !isFavorite);
     }
 	render(){
         let item = this.props.projectModel.item ? this.props.projectModel.item

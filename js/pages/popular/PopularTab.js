@@ -7,10 +7,12 @@ import {
     RefreshControl,
     DeviceEventEmitter,
 } from 'react-native';
+import FavoriteDao from '../../expand/dao/FavoriteDao';
 import ProjectModel from '../../model/ProjectModel';
 import RepositoryDetail from '../RepositoryDetail';
 import RepositoryCell from '../../common/RepositoryCell';
 import DataRepository,{FLAG_STORAGE} from '../../expand/dao/DataRepository';
+import Utils from '../../util/Utils';
 const URL='https://api.github.com/search/repositories?q=';
 const QUERY_STR='&sort=stars';
 export default class PopularTab extends Component{
@@ -20,15 +22,25 @@ export default class PopularTab extends Component{
         this.state = {
             result:'',
             isLoading:false,
-            dataSource:new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!==r2})
+            dataSource:new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!==r2}),
+            favoriteKeys:[]
         };
     }
+    onFavorite(item, isFavorite){
+        if(isFavorite){
+            this.props.favoriteDao.saveFavoriteItems(item.id.toString(), JSON.stringify(item));
+        }  else {
+            this.props.favoriteDao.removeFavoriteItems(item.id.toString());
+        }
+    }
     renderRow(projectModel){
-        return <RepositoryCell
-            {...this.props}
-            key={projectModel.item.id}
-            projectModel={projectModel}
-        />
+        return (
+            <RepositoryCell
+                {...this.props}
+                key={projectModel.item.id}
+                projectModel={projectModel}
+                onFavorite = {(item, isFavorite)=>this.onFavorite(item, isFavorite)}/>
+        )
     }
     render(){
         return <View style={{flex:1}}>
@@ -45,8 +57,7 @@ export default class PopularTab extends Component{
                         progressBackgroundColor="#ffff00"
                     />
                 }
-            >
-            </ListView>
+            />
         </View>
     }
     componentDidMount(){
@@ -58,24 +69,27 @@ export default class PopularTab extends Component{
     /**
      * Update Item favorite state
      */
-
-    flushFavoriteState(data){
+    getFavoriteKeys(){
+        this.props.favoriteDao.getFavoriteKeys()
+        .then(keys=>{
+            if(keys) this.setState({favoriteKeys:keys});
+            this.flushFavoriteState();
+        }).catch(err=>{
+            console.log(err);
+        })
+    }
+    flushFavoriteState(){
         let projectModels = [];
-        let items = data;
-        for (var i = 0; i < items.length; ++i){
-            projectModels.push(new ProjectModel(items[i], false));
+        for (var i = 0; i < this.items.length; ++i){
+            projectModels.push(new ProjectModel(this.items[i], Utils.checkFavorite(this.items[i], this.state.favoriteKeys)));
         }
-        this.updateState({
+        this.setState({
             isLoading:false,
             dataSource:this.getDataSource(projectModels)
         })
     }
     getDataSource(data){
         return this.state.dataSource.cloneWithRows(data);
-    }
-    updateState(dict){
-        if(!this)return
-        this.setState(dict);
     }
     loadData(again){
         this.setState({
@@ -85,19 +99,19 @@ export default class PopularTab extends Component{
         if(!again){
             this.dataRepository.fetchRepository(url)
             .then(result=>{
-                let items = result && result.items ? result.items : result ? result : [];
-                this.flushFavoriteState(items);
+                this.items = result && result.items ? result.items : result ? result : [];
                 if(!result || !result.update_date || !this.dataRepository.checkDate(result.update_date)){
                     DeviceEventEmitter.emit('showToast','Local data deprecated');
                     return this.dataRepository.fetchNetRepository(url);
                 } else {
+                    this.getFavoriteKeys();
                     DeviceEventEmitter.emit('showToast','Local data used');
                 }
             })
             .then(result=>{
                 if(result && result.items && result.items.length > 0){
                     DeviceEventEmitter.emit('showToast','Network data fetched');
-                    this.flushFavoriteState(result.items);
+                    this.getFavoriteKeys();
                 }
             })
             .catch(err=>{
@@ -108,9 +122,10 @@ export default class PopularTab extends Component{
         } else {
             this.dataRepository.fetchNetRepository(url)
             .then(result=>{
-                if(result && result.items && result.items.length > 0){
+                this.items = result && result.items ? result.items : result ? result : [];
+                if(this.items && this.items.length > 0){
                     DeviceEventEmitter.emit('showToast','Network data fetched');
-                    this.flushFavoriteState(result.items);
+                    this.getFavoriteKeys();
                 } else DeviceEventEmitter.emit('showToast',"No Internect connection");
             })
             .catch(err=>{
