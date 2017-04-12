@@ -11,17 +11,41 @@ import RepositoryDetail from '../pages/RepositoryDetail';
 export default class TrendingCell extends Component{
 	constructor(props) {
         super(props);
+        this.state = {
+			isFavorite:this.props.projectModel.isFavorite,
+			favoriteIcon:this.props.projectModel.isFavorite ? require('../../res/images/ic_star.png')
+             : require('../../res/images/ic_unstar_transparent.png')
+		}
+    }
+    setFavoriteState(isFavorite){
+        this.setState({
+            isFavorite:isFavorite,
+            favoriteIcon:isFavorite ? require('../../res/images/ic_star.png')
+                : require('../../res/images/ic_unstar_transparent.png')
+        })
+    }
+    onPressFavorite(){
+        /** declare a local variable to avoid that async method change the {this.state.isFavorite}
+            then cause some unexpected result (from debug)**/
+        let isFavorite = this.state.isFavorite;
+        this.setFavoriteState(!isFavorite);
+        this.props.onFavorite(this.props.projectModel.item, !isFavorite);
     }
 	render(){
 		let data = this.props.data;
 		let description = '<p>' + data.description + '</p>';
+        let favoriteButton = <TouchableOpacity
+				onPress = {()=>this.onPressFavorite()}>
+					<Image
+						style={[{height:22,width:22},{tintColor:'#2196F3'}]}
+						source={this.state.favoriteIcon}/>
+		    </TouchableOpacity>
 		return <TouchableOpacity
 			style={styles.container}
 			onPress={()=>{
 				this.props.navigator.push({
 					component:RepositoryDetail,
 					params:{
-						item:this.props.data,
 						...this.props,
 					}
 				})
@@ -47,17 +71,14 @@ export default class TrendingCell extends Component{
         	  		<View style={{flexDirection:'row',alignItems:'center',}}>
         	    		<Text>Built by: </Text>
         	    		{data.contributors.map((result,i,arr)=>{
-        	    			return <Image 
+        	    			return <Image
         	    				key={i}
         	    				style={{height:22,width:22}}
         	    				source={{uri:arr[i]}}
        						/>
         	    		})}
         	    	</View>
-        	    	<Image 
-        	    		style={{height:18,width:18}}
-        	    		source={require('../../res/images/ic_star.png')}
-        	    	/>
+        	    	{favoriteButton}
         	    </View>
         	</View>
         </TouchableOpacity>

@@ -13,6 +13,8 @@ import ViewUtils from '../../util/ViewUtils';
 import GitHubTrending from 'GitHubTrending';
 import NavigationBar from '../../common/NavigationBar';
 import TrendingCell from '../../common/TrendingCell';
+import FavoriteDao from '../../expand/dao/FavoriteDao';
+import Utils from '../../util/Utils';
 import DataRepository,{FLAG_STORAGE} from '../../expand/dao/DataRepository';
 export default class TrendingTab extends Component{
     constructor(props){
@@ -22,15 +24,46 @@ export default class TrendingTab extends Component{
             result:[],
             err:'',
             isLoading:false,
-            dataSource:new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!==r2})
+            dataSource:new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!==r2}),
+            favoriteKeys:[]
         };
     }
-    renderRow(data){
+    getFavoriteKeys(){
+        this.props.favoriteDao.getFavoriteKeys()
+        .then(keys=>{
+            if(keys) this.setState({favoriteKeys:keys});
+            this.flushFavoriteState();
+        }).catch(err=>{
+            console.log(err);
+        })
+    }
+    flushFavoriteState(){
+        let projectModels = [];
+        for (var i = 0; i < this.items.length; ++i){
+            projectModels.push(new ProjectModel(this.items[i], Utils.checkFavorite(this.items[i], this.state.favoriteKeys)));
+        }
+        this.setState({
+            isLoading:false,
+            dataSource:this.getDataSource(projectModels)
+        })
+    }
+    onFavorite(item, isFavorite){
+        if(isFavorite){
+            this.props.favoriteDao.saveFavoriteItems(item.id.toString(), JSON.stringify(item));
+        }  else {
+            this.props.favoriteDao.removeFavoriteItems(item.id.toString());
+        }
+    }
+    getDataSource(data){
+        return this.state.dataSource.cloneWithRows(data);
+    }
+    renderRow(projectModel){
         return (
             <TrendingCell
                 {...this.props}
-                key={data.id}
-                data={data}
+                key={projectModel.item.id}
+                projectModel={projectModel}
+                onFavorite = {(item, isFavorite)=>this.onFavorite(item,isFavorite)}
             />
         )
     }
@@ -53,14 +86,13 @@ export default class TrendingTab extends Component{
         if(!again){
             this.dataRepository.fetchRepository(url)
             .then(data=>{
+                this.items = data && data.items ? data.items : [];
                 if(data&&data.items){
                     DeviceEventEmitter.emit('showToast','Local data used');
                 } else if(data) {
                     DeviceEventEmitter.emit('showToast','Network data fetched');
                 } else DeviceEventEmitter.emit('showToast','No data available');
-                this.setState({
-                    dataSource:this.state.dataSource.cloneWithRows(data && data.items ? data.items : data ? data : []),
-                });
+                this.getFavoriteKeys();
             })
             .catch(err=>{
                 console.log(err);
@@ -70,10 +102,7 @@ export default class TrendingTab extends Component{
             .then(data=>{
                 if(data){
                    DeviceEventEmitter.emit('showToast','Network data fetched');
-                   this.setState({
-                       dataSource:this.state.dataSource.cloneWithRows(data)
-                   });
-
+                   this.getFavoriteKeys();
                 } else DeviceEventEmitter.emit('showToast','Network data unavailable');
             })
             .catch(err=>{
@@ -89,7 +118,7 @@ export default class TrendingTab extends Component{
               <View style={{flex:1}}>
                   <ListView
                       dataSource={this.state.dataSource}
-                      renderRow={(data)=>this.renderRow(data)}
+                      renderRow={(projectModel)=>this.renderRow(projectModel)}
                       refreshControl={
                           <RefreshControl
                               tintColor='#2196F3'
