@@ -33,6 +33,9 @@ export default class PopularTab extends Component{
             this.props.favoriteDao.removeFavoriteItems(item.id.toString());
         }
     }
+    /**componentWillReceiveProps(nextProps){
+        this.getFavoriteKeys();
+    }**/
     renderRow(projectModel){
         return (
             <RepositoryCell
@@ -53,7 +56,7 @@ export default class PopularTab extends Component{
                         colors={['#2196F3']}
                         title='Loading...'
                         refreshing={this.state.isLoading}
-                        onRefresh={()=>this.loadData(true)}
+                        onRefresh={()=>this.loadData(false)}
                         progressBackgroundColor="#ffff00"
                     />
                 }

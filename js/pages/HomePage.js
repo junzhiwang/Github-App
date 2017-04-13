@@ -57,7 +57,6 @@ export default class HomePage extends Component {
                        title="favorite"
                        renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_favorite.png')} />}
                        renderSelectedIcon={() => <Image style={[styles.image,{tintColor:'red'}]} source={require('../../res/images/ic_favorite.png')} />}
-
                        onPress={() => this.setState({ selectedTab: 'tb_favorite' })}>
                        <FavoritePage {...this.props}/>
                    </TabNavigator.Item>

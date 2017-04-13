@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
     AsyncStorage,
 } from 'react-native';
-import GitHubTrending from 'GitHubTrending';
+import GitHubTrending from '../../util/trending/GitHubTrending';
 export var FLAG_STORAGE={flag_popular:'popular',flag_trending:'trending'};
 export default class DataRepository{
 	constructor(flag){

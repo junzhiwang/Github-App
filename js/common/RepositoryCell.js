@@ -4,7 +4,8 @@ import {
 	Text,
 	Image,
 	StyleSheet,
-	TouchableOpacity
+	TouchableOpacity,
+    DeviceEventEmitter,
 } from 'react-native';
 import RepositoryDetail from '../pages/RepositoryDetail';
 export default class RepositoryCell extends Component{
@@ -17,12 +18,21 @@ export default class RepositoryCell extends Component{
 
 		}
     }
+    componentDidMount(){
+        this.listener = DeviceEventEmitter.addListener('changeState',(isFavorite,id)=>{
+            if(id === this.props.projectModel.item.id)
+                this.setFavoriteState(isFavorite);
+        });
+    }
+    componentWillUnmount(){
+        this.listener&&this.listener.remove();
+    }
     setFavoriteState(isFavorite){
         this.setState({
             isFavorite:isFavorite,
             favoriteIcon:isFavorite ? require('../../res/images/ic_star.png')
                 : require('../../res/images/ic_unstar_transparent.png')
-        })
+        });
     }
     onPressFavorite(){
         /** declare a local variable to avoid that async method change the {this.state.isFavorite}
@@ -49,7 +59,9 @@ export default class RepositoryCell extends Component{
 					params:{
 						item:item,
 						...this.props,
-					}
+                        isFavorite:this.state.isFavorite,
+					},
+
 				})
 			}}>
 			<View style={styles.cell_container}>

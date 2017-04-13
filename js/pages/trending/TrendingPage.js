@@ -10,6 +10,8 @@ import {
     RefreshControl,
     TouchableOpacity,
 } from 'react-native';
+import FavoriteDao from '../../expand/dao/FavoriteDao';
+import {FLAG_STORAGE} from '../../expand/dao/DataRepository';
 import TimeSpan from '../../model/TimeSpan';
 import Popover from '../../common/Popover';
 import LanguageDao,{FLAG_LANGUAGE} from '../../expand/dao/LanguageDao';
@@ -24,6 +26,7 @@ var timespanTextArray=[
 export default class TrendingPage extends Component {
     constructor(props) {
         super(props);
+        this.favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_trending);
         this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_language);
         this.state={
             result:'',
@@ -95,9 +98,11 @@ export default class TrendingPage extends Component {
                             let item = arr[i];
                             return item.checked?
                             <TrendingTab
-                                key={i}
-                                tabLabel={item.name}
-                                timeSpan={this.state.timeSpan}
+                                key = {i}
+                                tabLabel= {item.name}
+                                tabPath = {item.path}
+                                timeSpan ={ this.state.timeSpan}
+                                favoriteDao = {this.favoriteDao}
                                 {...this.props}/>:null
                         })}
                     </ScrollableTabView> : null;
