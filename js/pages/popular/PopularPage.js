@@ -46,13 +46,16 @@ export default class PopularPage extends Component {
                         tabBarActiveTextColor='white'
                         tabBarUnderlineStyle={{backgroundColor:'#e7e7e7',height:2}}
                         initialPage={0}
-                        renderTabBar={() => <ScrollableTabBar />}
+                        renderTabBar={() =>
+                            <ScrollableTabBar
+                                style={{height:40,borderWidth:0,elevation:2}}
+                                tabStyle={{height:39}}/>}
                     >
                         {this.state.languages.map((result,i,arr)=>{
                             let item = arr[i];
                             return item.checked?
                             <PopularTab
-                                key={i} 
+                                key={i}
                                 tabLabel={item.name}
                                 favoriteDao = {this.favoriteDao}
                                 {...this.props}/>:null

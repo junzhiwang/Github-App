@@ -27,6 +27,9 @@ export default class RepositoryCell extends Component{
     componentWillUnmount(){
         this.listener&&this.listener.remove();
     }
+    componentWillReceiveProps(nextProps){
+        this.setFavoriteState(nextProps.projectModel.isFavorite);
+    }
     setFavoriteState(isFavorite){
         this.setState({
             isFavorite:isFavorite,

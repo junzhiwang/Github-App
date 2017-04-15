@@ -56,7 +56,7 @@ export default class PopularTab extends Component{
                         colors={['#2196F3']}
                         title='Loading...'
                         refreshing={this.state.isLoading}
-                        onRefresh={()=>this.loadData(false)}
+                        onRefresh={()=>this.loadData(false,true)}
                         progressBackgroundColor="#ffff00"
                     />
                 }
@@ -64,7 +64,10 @@ export default class PopularTab extends Component{
         </View>
     }
     componentDidMount(){
-        this.loadData(false);
+        this.loadData(false,true);
+    }
+    componentWillReceiveProps(nextProps){
+        this.loadData(false,false);
     }
     genFetchUrl(key){
         return URL + key + QUERY_STR;
@@ -94,10 +97,12 @@ export default class PopularTab extends Component{
     getDataSource(data){
         return this.state.dataSource.cloneWithRows(data);
     }
-    loadData(again){
-        this.setState({
-            isLoading:true
-        })
+    loadData(again, isShowLoading){
+        if(isShowLoading){
+            this.setState({
+                isLoading:true
+            })
+        }
         let url = this.genFetchUrl(this.props.tabLabel);
         if(!again){
             this.dataRepository.fetchRepository(url)

@@ -41,6 +41,9 @@ export default class TrendingCell extends Component{
     componentWillUnmount(){
         this.listener&&this.listener.remove();
     }
+    componentWillReceiveProps(nextProps){
+        this.setFavoriteState(nextProps.projectModel.isFavorite);
+    }
 	render(){
 		let favoriteButton = <TouchableOpacity
 				onPress = {()=>this.onPressFavorite()}>

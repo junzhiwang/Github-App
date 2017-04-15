@@ -57,4 +57,28 @@ export default class FavoriteDao {
             }
         })
     }
+
+    getAllItems(){
+        return new Promise((resolve, reject)=>{
+            this.getFavoriteKeys()
+            .then(keys=>{
+                let items = [];
+                if(keys){
+                    AsyncStorage.multiGet(keys, (err, stores)=>{
+                        if(err) reject(err);
+                        else {
+                            try{
+                                stores.map((result, i, store)=>{
+                                    store[i][1]&&items.push(JSON.parse(store[i][1]));
+                                });
+                                resolve(items);
+                            }catch(e){reject(e)}
+                        }
+                    });
+                } else {
+                    resolve(JSON.parse(items));
+                }
+            }).catch(err=>reject(err));
+        })
+    }
 }

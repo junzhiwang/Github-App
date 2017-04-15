@@ -69,21 +69,21 @@ export default class TrendingTab extends Component{
         return this.state.dataSource.cloneWithRows(data);
     }
     componentDidMount(){
-        this.loadData(this.props.timeSpan,false);
+        this.loadData(this.props.timeSpan,false,true);
     }
     genFetchUrl(timeSpan){
         return API_URL + '/' + this.props.tabPath + '?' + timeSpan;
     }
     componentWillReceiveProps(nextProps){
-        if(nextProps.timeSpan!==this.props.timeSpan){
-            this.loadData(nextProps.timeSpan,false);
-        }
+        this.loadData(nextProps.timeSpan,false,false);
     }
-    loadData(timeSpan,again){
+    loadData(timeSpan,again,isShowLoading){
         let url = this.genFetchUrl(timeSpan.searchText);
-        this.setState({
-            isLoading:true
-        });
+        if(isShowLoading){
+            this.setState({
+                isLoading:true
+            });
+        }
         if(!again){
             this.dataRepository.fetchRepository(url)
             .then(data=>{
@@ -127,7 +127,7 @@ export default class TrendingTab extends Component{
                               colors={['#2196F3']}
                               title='Loading...'
                               refreshing={this.state.isLoading}
-                              onRefresh={()=>this.loadData(this.props.timeSpan,true)}
+                              onRefresh={()=>this.loadData(this.props.timeSpan,true,true)}
                           />
                       }
                   >
