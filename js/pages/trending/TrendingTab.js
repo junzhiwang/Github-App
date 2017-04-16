@@ -75,7 +75,11 @@ export default class TrendingTab extends Component{
         return API_URL + '/' + this.props.tabPath + '?' + timeSpan;
     }
     componentWillReceiveProps(nextProps){
-        this.loadData(nextProps.timeSpan,false,false);
+      if(nextProps.timeSpan !== this.props.timeSpan){
+          this.loadData(nextProps.timeSpan, false, true);
+      } else {
+          this.getFavoriteKeys();
+      }
     }
     loadData(timeSpan,again,isShowLoading){
         let url = this.genFetchUrl(timeSpan.searchText);
@@ -85,15 +89,22 @@ export default class TrendingTab extends Component{
             });
         }
         if(!again){
-            this.dataRepository.fetchRepository(url)
+            this.dataRepository.fetchLocalRepository(url)
             .then(data=>{
-                this.items = data && data.items ? data.items : data ? data : [];
-                if(data&&data.items){
-                    DeviceEventEmitter.emit('showToast','Local data used');
-                } else if(data) {
-                    DeviceEventEmitter.emit('showToast','Network data fetched');
-                } else DeviceEventEmitter.emit('showToast','No data available');
+                if(!data || !data.items || !this.dataRepository.checkDate(data.update_date)){
+                    DeviceEventEmitter.emit('showToast','Local data deprecated');
+                    return this.dataRepository.fetchNetRepository(url);
+                }
+                this.items = data.items;
+                DeviceEventEmitter.emit('showToast','Local data used');
                 this.getFavoriteKeys();
+            })
+            .then(data=>{
+                if(data){
+                   this.items = data;
+                   DeviceEventEmitter.emit('showToast','Network data fetched');
+                   this.getFavoriteKeys();
+                } else DeviceEventEmitter.emit('showToast','Network data unavailable');
             })
             .catch(err=>{
                 console.log(err);
@@ -102,7 +113,7 @@ export default class TrendingTab extends Component{
             this.dataRepository.fetchNetRepository(url)
             .then(data=>{
                 if(data){
-                   this.items = data && data.items ? data.items : data ? data : [];
+                   this.items = data;
                    DeviceEventEmitter.emit('showToast','Network data fetched');
                    this.getFavoriteKeys();
                 } else DeviceEventEmitter.emit('showToast','Network data unavailable');

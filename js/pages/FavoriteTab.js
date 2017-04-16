@@ -34,6 +34,7 @@ export default class FavoriteTab extends Component{
             onFavorite = {(item, isFavorite)=>this.onFavorite(item, isFavorite)}/>
     }
     componentWillReceiveProps(nextProps){
+        //When return from repositoryDetail page or another scrollable view, remove the unfavorite item.
         this.loadData(false);
     }
     render(){
@@ -61,10 +62,16 @@ export default class FavoriteTab extends Component{
         }  else {
             this.favoriteDao.removeFavoriteItems(item.id.toString());
         }
+        // Matain an array about unfavoriteItems, when
         ArrayUtils.updateArray(this.unfavoriteItems, item);
     }
     componentDidMount(){
         this.loadData(true);
+    }
+    componentWillUnmount(){
+        if(this.unfavoriteItems.length > 0){
+            DeviceEventEmitter.emit('favoriteChanged_popular');
+        }
     }
     getDataSource(data){
         return this.state.dataSource.cloneWithRows(data);

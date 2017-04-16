@@ -14,8 +14,7 @@ export default class RepositoryCell extends Component{
 		this.state = {
 			isFavorite:this.props.projectModel.isFavorite,
 			favoriteIcon:this.props.projectModel.isFavorite ? require('../../res/images/ic_star.png')
-             : require('../../res/images/ic_unstar_transparent.png')
-
+            : require('../../res/images/ic_unstar_transparent.png')
 		}
     }
     componentDidMount(){

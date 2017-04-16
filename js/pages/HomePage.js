@@ -11,7 +11,6 @@ import {
 import FavoritePage from './FavoritePage';
 import Toast,{DURATION} from 'react-native-easy-toast';
 import PopularPage from './popular/PopularPage';
-import AsyncStoragePage from '../../AsyncStorage';
 import MyPage from './my/MyPage';
 import TrendingPage from './trending/TrendingPage';
 export default class HomePage extends Component {

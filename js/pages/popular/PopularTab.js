@@ -19,6 +19,7 @@ export default class PopularTab extends Component{
     constructor(props) {
         super(props);
         this.dataRepository = new DataRepository(FLAG_STORAGE.flag_popular);
+        this.isFavoriteChanged = false;
         this.state = {
             result:'',
             isLoading:false,
@@ -33,9 +34,9 @@ export default class PopularTab extends Component{
             this.props.favoriteDao.removeFavoriteItems(item.id.toString());
         }
     }
-    /**componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps){
         this.getFavoriteKeys();
-    }**/
+    }
     renderRow(projectModel){
         return (
             <RepositoryCell
@@ -66,9 +67,7 @@ export default class PopularTab extends Component{
     componentDidMount(){
         this.loadData(false,true);
     }
-    componentWillReceiveProps(nextProps){
-        this.loadData(false,false);
-    }
+
     genFetchUrl(key){
         return URL + key + QUERY_STR;
     }
