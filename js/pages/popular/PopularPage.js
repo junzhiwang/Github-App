@@ -35,9 +35,6 @@ export default class PopularPage extends Component {
             console.log(err);
         });
     }
-    componentDidMount(){
-
-    }
     render() {
         let content = this.state.languages.length > 0 ?
                     <ScrollableTabView
@@ -65,6 +62,7 @@ export default class PopularPage extends Component {
         return  <View style={styles.container}>
                     <NavigationBar
                         title="Hot"
+                        style={{backgroundColor:'#2196F3'}}
                     />
                     {content}
                 </View>

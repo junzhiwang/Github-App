@@ -128,6 +128,7 @@ export default class TrendingPage extends Component {
         return  <View style={styles.container}>
                     <NavigationBar
                         titleView={this.renderTitleView()}
+                        style={{backgroundColor:'#2196F3'}}
                     />
                     {content}
                     {timeSpanView}

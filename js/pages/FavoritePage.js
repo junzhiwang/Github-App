@@ -37,6 +37,7 @@ export default class FavoritePage extends Component {
 	        return  <View style={styles.container}>
 	                    <NavigationBar
 	                        title="Favorite"
+													style={{backgroundColor:'#2196F3'}}
 	                    />
 	                    {content}
 	                </View>
