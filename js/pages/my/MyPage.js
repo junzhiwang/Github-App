@@ -55,6 +55,9 @@ export default class MyPage extends Component {
             case MORE_MENU.About:
                 targetComponent = AboutPage;
                 break;
+            case MORE_MENU.About_Author:
+                targetComponent = AboutPage;
+                break;
         }
         if(targetComponent){
             this.props.navigator.push({

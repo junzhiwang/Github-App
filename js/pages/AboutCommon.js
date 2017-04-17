@@ -17,8 +17,10 @@ import {MORE_MENU} from '../../common/MoreMenu';
 import ViewUtils from '../../util/ViewUtils';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import config from '../../../res/data/config.json';
-export default class AboutPage extends Component {
-  constructor(props) {
+export var FLAG_ABOUT = {flag_about:'about',flag_about_me:'about me'};
+
+export default class AboutCommon extends Component {
+  constructor(props, flag_about) {
       super(props);
       this.state =  {
 

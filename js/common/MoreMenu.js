@@ -8,4 +8,6 @@ export const MORE_MENU = {
     About:'About',
     About_Author:'About Author',
     Custom_Theme:'Custom Theme',
+    WebSite:'WebSite',
+    FeedBack:'Feedback'
 }
