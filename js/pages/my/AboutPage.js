@@ -68,7 +68,7 @@ export default class AboutPage extends Component {
               <Text style={ styles.sectionSpeakerText }>
                   {params.name}
               </Text>
-              <Text style={ styles.sectionTitleText }>
+              <Text style={ [styles.sectionTitleText,{marginLeft:10,marginRight:10}] }>
                   {params.description}
               </Text>
           </View>
@@ -175,12 +175,12 @@ const styles = StyleSheet.create({
   },
   sectionSpeakerText: {
     color: 'white',
-    fontSize: 24,
+    fontSize: 20,
     paddingVertical: 5
   },
   sectionTitleText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 14,
     paddingVertical: 5
   },
   row: {

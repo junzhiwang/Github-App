@@ -70,7 +70,7 @@ export default class AboutCommon extends Component {
               <Text style={ styles.sectionSpeakerText }>
                   {params.name}
               </Text>
-              <Text style={ styles.sectionTitleText }>
+              <Text style={ [styles.sectionTitleText,{marginLeft:10,marginRight:10}] }>
                   {params.description}
               </Text>
           </View>
