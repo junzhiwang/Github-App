@@ -8,7 +8,7 @@ import {
     Image,
     DeviceEventEmitter
 } from 'react-native';
-import FavoritePage from './FavoritePage';
+import FavoritePage from './favorite/FavoritePage';
 import Toast,{DURATION} from 'react-native-easy-toast';
 import PopularPage from './popular/PopularPage';
 import MyPage from './my/MyPage';

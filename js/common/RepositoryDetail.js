@@ -12,7 +12,7 @@ import {
 const URL = 'https://www.google.com';
 const TRENDING_URL = 'https://github.com/';
 import ViewUtils from '../util/ViewUtils';
-import NavigationBar from '../common/NavigationBar';
+import NavigationBar from './NavigationBar';
 export default class RepositoryDetail extends Component{
     constructor(props){
         super(props);
@@ -28,13 +28,6 @@ export default class RepositoryDetail extends Component{
                 : require('../../res/images/ic_unstar_transparent.png')
         };
     }
-    completeUrl(){
-
-    }
-    checkUrl(){
-
-    }
-
     onBack(){
         if(this.state.canGoBack){
             this.webView.goBack();
@@ -49,12 +42,6 @@ export default class RepositoryDetail extends Component{
         } else {
             DeviceEventEmitter.emit("showToast","Cannot go forward...")
         }
-    }
-    go(){
-        //let validUrl = completeUrl(this.text);
-        this.setState({
-            url:this.text
-        })
     }
     onNavigationStateChange(e){
         this.setState({

@@ -73,16 +73,14 @@ export default class MyPage extends Component {
         </View>
     }
     render() {
-      let navigationBar = <NavigationBar
-          title="My"
-          style={{backgroundColor:'#2196F3'}}
-      />
+        let navigationBar = <NavigationBar
+            title="My"
+            style={{backgroundColor:'#2196F3'}}/>
         return  <View style={GlobalStyles.root_container}>
                     {navigationBar}
                     <ScrollView>
                         <TouchableHighlight
-                            onPress = {()=>this.onClick(MORE_MENU.About)}
-                            >
+                            onPress = {()=>this.onClick(MORE_MENU.About)}>
                             <View style={[styles.item,{height:80}]}>
                                 <View style={{flexDirection:'row',alignItems:'center'}}>
                                     <Image source={require('../../../res/images/ic_trending.png')}
@@ -111,7 +109,7 @@ export default class MyPage extends Component {
                         {this.getItem(MORE_MENU.About_Author,require('../../../res/images/ic_insert_emoticon.png'),null)}
                         <View style={GlobalStyles.line}/>
                     </ScrollView>
-                </View>
+                </View>;
     }
 }
 

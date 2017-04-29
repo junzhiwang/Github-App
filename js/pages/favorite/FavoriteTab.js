@@ -7,14 +7,13 @@ import {
     RefreshControl,
     DeviceEventEmitter,
 } from 'react-native';
-import FavoriteDao from '../expand/dao/FavoriteDao';
-import ProjectModel from '../model/ProjectModel';
-import RepositoryDetail from './RepositoryDetail';
-import RepositoryCell from '../common/RepositoryCell';
-import TrendingCell from '../common/TrendingCell';
-import DataRepository,{FLAG_STORAGE} from '../expand/dao/DataRepository';
-import Utils from '../util/Utils';
-import ArrayUtils from '../util/ArrayUtils';
+import FavoriteDao from '../../expand/dao/FavoriteDao';
+import ProjectModel from '../../model/ProjectModel';
+import RepositoryCell from '../../common/RepositoryCell';
+import TrendingCell from '../../common/TrendingCell';
+import DataRepository,{FLAG_STORAGE} from '../../expand/dao/DataRepository';
+import Utils from '../../util/Utils';
+import ArrayUtils from '../../util/ArrayUtils';
 export default class FavoriteTab extends Component{
     constructor(props) {
         super(props);
@@ -31,7 +30,8 @@ export default class FavoriteTab extends Component{
             {...this.props}
             key={projectModel.item.id}
             projectModel={projectModel}
-            onFavorite = {(item, isFavorite)=>this.onFavorite(item, isFavorite)}/>
+            onFavorite = {(item, isFavorite)=>this.onFavorite(item, isFavorite)}
+        />
     }
     componentWillReceiveProps(nextProps){
         //When return from repositoryDetail page or another scrollable view, remove the unfavorite item.
@@ -50,10 +50,8 @@ export default class FavoriteTab extends Component{
                         title='Loading...'
                         refreshing={this.state.isLoading}
                         onRefresh={()=>this.loadData(true)}
-                        progressBackgroundColor="#ffff00"
-                    />
-                }
-            />
+                        progressBackgroundColor="#ffff00"/>
+                }/>
         </View>
     }
     onFavorite(item, isFavorite){

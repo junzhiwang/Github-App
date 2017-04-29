@@ -8,7 +8,7 @@ import {
     DeviceEventEmitter
 } from 'react-native';
 import HTMLView from 'react-native-htmlview';
-import RepositoryDetail from '../pages/RepositoryDetail';
+import RepositoryDetail from './RepositoryDetail';
 export default class TrendingCell extends Component{
 	constructor(props) {
         super(props);

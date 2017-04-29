@@ -7,7 +7,7 @@ import {
 	TouchableOpacity,
     DeviceEventEmitter,
 } from 'react-native';
-import RepositoryDetail from '../pages/RepositoryDetail';
+import RepositoryDetail from './RepositoryDetail';
 export default class RepositoryCell extends Component{
 	constructor(props) {
         super(props);
@@ -81,7 +81,7 @@ export default class RepositoryCell extends Component{
         	    		<Text>Stars:</Text>
         	    		<Text>{item.stargazers_count}</Text>
         	    	</View>
-        	    			{favoriteButton}
+        	    	{favoriteButton}
         	    </View>
         	</View>
         </TouchableOpacity>
