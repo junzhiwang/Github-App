@@ -17,6 +17,7 @@ import SortTagPage from './SortTagPage';
 import RemoveTagPage from './RemoveTagPage';
 import ViewUtils from '../../util/ViewUtils';
 import AboutPage from './AboutPage';
+import AboutMePage from './AboutMePage';
 export default class MyPage extends Component {
     constructor(props) {
         super(props);
@@ -56,7 +57,7 @@ export default class MyPage extends Component {
                 targetComponent = AboutPage;
                 break;
             case MORE_MENU.About_Author:
-                targetComponent = AboutPage;
+                targetComponent = AboutMePage;
                 break;
         }
         if(targetComponent){

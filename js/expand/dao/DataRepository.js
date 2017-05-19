@@ -3,7 +3,7 @@ import {
     AsyncStorage,
 } from 'react-native';
 import GitHubTrending from '../../util/trending/GitHubTrending';
-export var FLAG_STORAGE={flag_popular:'popular',flag_trending:'trending'};
+export var FLAG_STORAGE={flag_popular:'popular',flag_trending:'trending',flag_my:'my'};
 export default class DataRepository{
 	constructor(flag){
 		this.flag = flag;
@@ -69,19 +69,24 @@ export default class DataRepository{
 					reject(err);
 				})
 				.then(responseData=>{
-					if(!responseData||!responseData.items||!responseData.items.length===0){
+					if(!responseData){
 						reject(new Error('responseData is null'));
 						return;
 					}
 					resolve(responseData);
-					this.saveRepository(url,responseData.items);
+					this.saveRepository(url,responseData.items||responseData);
 				}).done();
 			}
 		});
 	}
 	saveRepository(url,items){
 		if(!url||!items) return;
-		let wrapData={items:items,update_date:new Date().getTime()};
+		let wrapData;
+		if(this.flag === FLAG_STORAGE.flag_my){
+			wrapData={item :items,update_date:new Date().getTime()};
+		} else {
+			wrapData={items : items,update_date:new Date().getTime()};
+		}
 		AsyncStorage.setItem(url,JSON.stringify(wrapData),(err)=>{
 			console.log(err);
 		});

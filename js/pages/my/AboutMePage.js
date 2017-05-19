@@ -16,10 +16,11 @@ import ViewUtils from '../../util/ViewUtils';
 import config from '../../../res/data/config.json';
 import AboutCommon, {FLAG_ABOUT} from './AboutCommon';
 import WebViewPage from './WebViewPage';
-export default class AboutPage extends Component {
+import myinfo from '../../../res/data/myinfo.json';
+export default class AboutMePage extends Component {
     constructor(props) {
         super(props);
-        this.aboutCommon = new AboutCommon(props, (dict)=>this.updateState(dict), FLAG_ABOUT.flag_about, config);
+        this.aboutCommon = new AboutCommon(props, (dict)=>this.updateState(dict), FLAG_ABOUT.flag_about_me, config);
         this.state = {
             projectModels : [],
         };
@@ -29,6 +30,9 @@ export default class AboutPage extends Component {
     }
     componentDidMount(){
         this.aboutCommon.componentDidMount();
+    }
+    componentWillReceiveProps(nextProps){
+        this.forceUpdate();
     }
     onClick(tab){
         let targetComponent, params = {...this.props};
