@@ -9,6 +9,7 @@ import {
   View,
   Platform,
   Linking,
+  ClipBoard,
 } from 'react-native';
 import GlobalStyles from '../../../res/styles/GlobalStyles'
 import {MORE_MENU} from '../../common/MoreMenu';
@@ -23,7 +24,15 @@ export default class AboutMePage extends Component {
         this.aboutCommon = new AboutCommon(props, (dict)=>this.updateState(dict), FLAG_ABOUT.flag_about_me, config);
         this.state = {
             projectModels : [],
+            author: config.author,
+            showRepository:false,
+            showIndividual: false,
+            showQQ: false,
+            showContact: false,
         };
+    }
+    getClickIcon(isShow){
+        return isShow ? require('../../../res/images/ic_tiaozhuan_up.png') : require('../../../res/images/ic_tiaozhuan_down.png');
     }
     updateState(dict){
         this.setState(dict);
@@ -52,6 +61,20 @@ export default class AboutMePage extends Component {
                     } else return Linking.openURL(url);
                 }).catch(err => console.err('An error occurred', err));
                 break;
+            case myinfo.INDIVIDUAL:
+                this.updateState({showIndividual:!this.state.showIndividual});
+                break;
+            case myinfo.CONTACT:
+                this.updateState({showContact:!this.state.showContact});
+                break;
+            case myinfo.QQ:
+                this.updateState({showQQ:!this.state.showQQ});
+                break;
+            case myinfo.REPOSITORY:
+                this.updateState({showRepository:!this.state.showRepository});
+                break;
+            case myinfo.CONTACT.items.QQ:
+
         }
         if(targetComponent){
             this.props.navigator.push({
@@ -60,9 +83,30 @@ export default class AboutMePage extends Component {
             });
         }
     }
+    renderItems(dict, isShowAccount){
+        if(!dict) return null;
+        let views = [];
+        for(let i in dict){
+            let title = isShowAccount ? dict[i].title + ':' + dict[i].account : dict[i].title;
+            views.push(
+                <View key = {i}>
+                    {ViewUtils.getSettingItem(()=>this.onClick(dict[i]),null,title,{tintColor:'#2196F3'}, null)}
+                </View>
+            )
+        }
+        return views;
+    }
     render(){
         let contentView = <View>
-            {this.aboutCommon.renderRepository(this.state.projectModels)}
+            {/**this.aboutCommon.renderRepository(this.state.projectModels)**/}
+            {ViewUtils.getSettingItem(()=>this.onClick(myinfo.INDIVIDUAL),require('../../../res/images/ic_computer.png'),myinfo.INDIVIDUAL.name, {tintColor:'#2196F3'}, this.getClickIcon(this.state.showIndividual))}
+            {this.state.showIndividual ? this.renderItems(myinfo.INDIVIDUAL.items, false) : null}
+            {ViewUtils.getSettingItem(()=>this.onClick(myinfo.REPOSITORY),require('../../../res/images/ic_code.png'),myinfo.REPOSITORY, {tintColor:'#2196F3'}, this.getClickIcon(this.state.showRepository))}
+            {this.state.showRepository ? this.aboutCommon.renderRepository(this.state.projectModels) : null}
+            {ViewUtils.getSettingItem(()=>this.onClick(myinfo.QQ),require('../../../res/images/ic_computer.png'),myinfo.QQ.name, {tintColor:'#2196F3'}, this.getClickIcon(this.state.showQQ))}
+            {this.state.showQQ ? this.renderItems(myinfo.QQ.items, false) : null}
+            {ViewUtils.getSettingItem(()=>this.onClick(myinfo.CONTACT),require('../../../res/images/ic_contacts.png'),myinfo.CONTACT.name, {tintColor:'#2196F3'}, this.getClickIcon(this.state.showContact))}
+            {this.state.showContact ? this.renderItems(myinfo.CONTACT.items, true) : null}
             {ViewUtils.getSettingItem(()=>this.onClick(MORE_MENU.WebSite),require('../../../res/images/ic_computer.png'), MORE_MENU.WebSite, {tintColor:'#2196F3'}, null)}
             {ViewUtils.getSettingItem(()=>this.onClick(MORE_MENU.About_Author),require('../../../res/images/ic_insert_emoticon.png'), MORE_MENU.About_Author, {tintColor:'#2196F3'}, null)}
             {ViewUtils.getSettingItem(()=>this.onClick(MORE_MENU.FeedBack),require('../../../res/images/ic_feedback.png'), MORE_MENU.FeedBack, {tintColor:'#2196F3'}, null)}
@@ -74,5 +118,6 @@ export default class AboutMePage extends Component {
             'avatar':config.author.avatar1,
             'backgroundImg':config.author.backgroundImg1
         });
+        <View style>
     }
 }

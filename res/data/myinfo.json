@@ -5,7 +5,7 @@
         "items": {
             "PERSONAL_BLOG": {
                 "title": "Homepage",
-                "url": "http://jiapenghui.com",
+                "url": "http://blog.csdn.net/wangjunzhi93",
             },
             "CSDN": {
                 "title": "CSDN",
@@ -30,7 +30,7 @@
             },
             "Wechat": {
                 "title": "WeChat",
-                "acount": "15651620701"
+                "account": "15651620701"
             },
             "QQ": {
                 "title": "QQ",
