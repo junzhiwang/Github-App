@@ -118,6 +118,5 @@ export default class AboutMePage extends Component {
             'avatar':config.author.avatar1,
             'backgroundImg':config.author.backgroundImg1
         });
-        <View style>
     }
 }
