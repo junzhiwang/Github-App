@@ -15,5 +15,5 @@
 
 * Download the code, go to the root directory and :
 
-** for iOS, run:   react-native run-ios
-** for Android, run: react-native run-android
+     * for iOS, run:   react-native run-ios
+     * for Android, run: react-native run-android
