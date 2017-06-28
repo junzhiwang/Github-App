@@ -10,3 +10,10 @@
 ## Preview 
 * To see previews, please go to 'preview' directory.
 
+## Run the app
+* Make sure you installed NodeJS and your iOS or Android simulator is available. For iOS, make sure you have Xcode. For Android, make sure you have Android Studio or Eclipse etc. 
+
+* Download the code, go to the root directory and :
+
+** for iOS, run:   react-native run-ios
+** for Android, run: react-native run-android
