@@ -11,7 +11,8 @@
 * To see previews, please go to 'preview' directory.
 
 ## Run the app
-* Make sure you installed NodeJS and your iOS or Android simulator is available. For iOS, make sure you have Xcode. For Android, make sure you have Android Studio or Eclipse etc. 
+* Make sure you installed NodeJS.
+* Make sure your iOS or Android simulator is available. For iOS, you need Xcode. For Android, you need Studio or Eclipse etc. 
 
 * Download the code, go to the root directory and :
 
