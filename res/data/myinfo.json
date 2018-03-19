@@ -1,54 +1,54 @@
 {
-    "REPOSITORY": "Projects",
-    "INDIVIDUAL": {
-        "name": "My Homepage",
-        "items": {
-            "PERSONAL_BLOG": {
-                "title": "Homepage",
-                "url": "http://blog.csdn.net/wangjunzhi93",
-            },
-            "CSDN": {
-                "title": "CSDN",
-                "url": "http://blog.csdn.net/wangjunzhi93",
-            },
-            "LINKEDIN": {
-                "title": "Linkedin",
-                "url": "https://www.linkedin.com/in/junzhiwang/",
-            },
-            "GITHUB": {
-                "title": "GitHub",
-                "url": "https://github.com/junzhiwang/",
-            },
-        }
-    },
-    "CONTACT": {
-        "name": "Contact",
-        "items": {
-            "Email": {
-                "title": "Email",
-                "account": "junzhiwa@usc.edu",
-            },
-            "Wechat": {
-                "title": "WeChat",
-                "account": "15651620701"
-            },
-            "QQ": {
-                "title": "QQ",
-                "account": "376944886",
-            },
-        }
-    },
-    "QQ": {
-        "name": "Exchange group",
-        "items": {
-            "MD": {
-                "title": "移动开发者技术分享群",
-                "account": "335939197",
-            },
-            "RN": {
-                "title": "React Native学习交流群",
-                "account": "165774887",
-            }
-        },
-    },
+  "REPOSITORY": "Projects",
+  "INDIVIDUAL": {
+    "name": "My Homepage",
+    "items": {
+      "PERSONAL_BLOG": {
+        "title": "Homepage",
+        "url": "http://blog.csdn.net/wangjunzhi93"
+      },
+      "CSDN": {
+        "title": "CSDN",
+        "url": "http://blog.csdn.net/wangjunzhi93"
+      },
+      "LINKEDIN": {
+        "title": "Linkedin",
+        "url": "https://www.linkedin.com/in/junzhiwang/"
+      },
+      "GITHUB": {
+        "title": "GitHub",
+        "url": "https://github.com/junzhiwang/"
+      }
+    }
+  },
+  "CONTACT": {
+    "name": "Contact",
+    "items": {
+      "Email": {
+        "title": "Email",
+        "account": "junzhiwa@usc.edu"
+      },
+      "Wechat": {
+        "title": "WeChat",
+        "account": "15651620701"
+      },
+      "QQ": {
+        "title": "QQ",
+        "account": "376944886"
+      }
+    }
+  },
+  "QQ": {
+    "name": "Exchange group",
+    "items": {
+      "MD": {
+        "title": "移动开发者技术分享群",
+        "account": "335939197"
+      },
+      "RN": {
+        "title": "React Native学习交流群",
+        "account": "165774887"
+      }
+    }
+  }
 }
